@@ -1,0 +1,35 @@
+{
+  "name": "com.ishix.history.tracker",
+  "version": "1.0.0",
+  "displayName": "History Tracker",
+  "description": "This is a save data management plugin for Unity. It allows you to easily save and restore game states at any time.",
+  "unity": "2022.3",
+  "author": {
+    "name": "IShix",
+    "url": "https://github.com/IShix-g"
+  },
+  "keywords": [
+    "Unity",
+    "Tools",
+    "History",
+    "Save",
+    "Restore",
+    "Record",
+    "GameState",
+    "Persistence",
+    "DataManagement",
+    "Versioning",
+    "Debug",
+    "Snapshot"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IShix-g/HistoryTracker.git"
+  },
+  "url": "https://github.com/IShix-g/HistoryTracker",
+  "documentationUrl": "https://github.com/IShix-g/HistoryTracker",
+  "licensesUrl": "https://github.com/IShix-g/HistoryTracker/blob/master/LICENSE",
+  "samples": [],
+  "dependencies": {}
+}

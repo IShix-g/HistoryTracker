@@ -8,13 +8,13 @@ namespace HistoryTracker
     /// including saving, retrieving file paths for save data,
     /// and applying save data in a system or application.
     /// </summary>
-    public interface ISaveDataHandler
+    public interface IHistSaveDataHandler
     {
         /// <summary>
-        /// Save game data
+        /// Called before saving
         /// Note: This is called before data is copied.
         /// </summary>
-        void SaveData();
+        HistRecordInfo OnBeforeSave();
         /// <summary>
         /// Get list of save data file paths
         /// Note: Returns a list of file paths required for restoration.

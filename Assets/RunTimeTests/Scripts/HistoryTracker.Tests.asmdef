@@ -1,4 +1,16 @@
 {
-	"name": "HistoryTracker.Tests",
-	"references":[ "GUID:639b657a2f63f4c0db183b489a20d697" ]
+    "name": "HistoryTracker.Tests",
+    "rootNamespace": "",
+    "references": [
+        "GUID:639b657a2f63f4c0db183b489a20d697"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

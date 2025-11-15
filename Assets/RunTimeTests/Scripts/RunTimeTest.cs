@@ -1,16 +1,39 @@
-#if UNITY_EDITOR
-using System.IO;
+#if DEBUG
 using UnityEngine;
+using UnityEngine.UI;
+using HistoryTracker;
 
 namespace Tests
 {
     public class RunTimeTest : MonoBehaviour
     {
-        readonly DummyData _data = new();
+        [SerializeField] Text _text;
+        
+        TestModelRepository _repository;
+        
+        public void Inject(TestModelRepository repository) => _repository = repository;
 
-        void Awake() => _data.Create();
+        void Awake()
+        {
+            // IHistSaveDataHandlerを実装したrepositoryを渡す
+            Hist.Configure(_repository);
+        }
 
-        void OnDestroy() => _data.Release();
+        void Start()
+        {
+            _repository.OnRestored += OnRestored;
+            OnRestored();
+        }
+
+        void OnRestored()
+        {
+            var texts = string.Empty;
+            foreach (var model in _repository.Models)
+            {
+                texts += $"Saved Count: {model.SaveCount}\n";
+            }
+            _text.text = texts;
+        }
     }
 }
 #endif

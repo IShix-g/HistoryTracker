@@ -7,32 +7,22 @@ namespace Tests
 {
     public class RunTimeTest : MonoBehaviour
     {
-        [SerializeField] Text _text;
+        [SerializeField] Button _dialogButton;
         
         TestModelRepository _repository;
         
         public void Inject(TestModelRepository repository) => _repository = repository;
 
-        void Awake()
-        {
-            // IHistSaveDataHandlerを実装したrepositoryを渡す
-            Hist.Configure(_repository);
-        }
+        // Initialize the repository that implements IHistSaveDataHandler in Awake
+        void Awake() => Hist.Configure(_repository);
 
-        void Start()
+        void Start() => _dialogButton.onClick.AddListener(OnDialogButtonClicked);
+        
+        void OnDialogButtonClicked()
         {
-            _repository.OnRestored += OnRestored;
-            OnRestored();
-        }
-
-        void OnRestored()
-        {
-            var texts = string.Empty;
-            foreach (var model in _repository.Models)
-            {
-                texts += $"Saved Count: {model.SaveCount}\n";
-            }
-            _text.text = texts;
+            // Display a dialog by creating an object and calling OpenDialog.
+            var obj = Hist.CreateOrGet();
+            obj.OpenDialog(Hist.Release);
         }
     }
 }

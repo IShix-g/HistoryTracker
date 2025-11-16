@@ -8,6 +8,7 @@ namespace Tests
     public sealed class TestModelLoader : MonoBehaviour
     {
         [SerializeField] RunTimeTest _test;
+        [SerializeField] RunTimeTestRecordLog _log;
         
         public TestModelRepository Repository { get; private set; } = new ();
 
@@ -21,6 +22,7 @@ namespace Tests
             };
             Repository.Load(paths);
             _test.Inject(Repository);
+            _log.Inject(Repository);
         }
 
         // void OnDestroy() => Repository.DeleteAll();

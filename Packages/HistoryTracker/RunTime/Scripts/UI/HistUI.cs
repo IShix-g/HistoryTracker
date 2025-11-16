@@ -1,0 +1,49 @@
+
+using System;
+using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
+namespace HistoryTracker
+{
+    public sealed class HistUI : MonoBehaviour
+    {
+        public const string ResourcesPathForEditor = "Packages/com.ishix.history.tracker/RunTime/Prefabs/HistoryTracker.prefab";
+        public const string ResourcesPath = "HistoryTracker/HistoryTracker";
+
+        [SerializeField] RecordsHistDialog _dialog;
+
+        static HistUI s_instance;
+
+        internal static HistUI CreateOrGet(HistManager manager)
+        {
+            if (s_instance != null)
+            {
+                s_instance._dialog.Set(manager);
+                return s_instance;
+            }
+#if UNITY_EDITOR
+            var prefab = AssetDatabase.LoadAssetAtPath<HistUI>(ResourcesPathForEditor);
+#else
+            var prefab = Resources.Load<HistUI>(ResourcesPath);
+#endif
+            var go = Instantiate(prefab);
+            s_instance = go;
+            s_instance._dialog.Set(manager);
+            return go;
+        }
+
+        internal static void Release()
+        {
+            if (s_instance != null)
+            {
+                Destroy(s_instance.gameObject);
+            }
+        }
+
+        public void OpenDialog(Action closeAction = null) => _dialog.Open(closeAction);
+        public void CloseDialog() => _dialog.Close();
+    }
+}

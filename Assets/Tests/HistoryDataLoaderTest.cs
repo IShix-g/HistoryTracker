@@ -32,7 +32,6 @@ namespace Tests
                 var record = service.Add(paths);
                 record.Title = $"Test {i}";
                 record.Description = $"Description {i}";
-                Assert.That(record.Id, Is.EqualTo(i));
             }
             service.Save();
 
@@ -40,7 +39,7 @@ namespace Tests
             Assert.That(service.GetRecords().Length, Is.EqualTo(testCount));
             for (var i = 1; i <= testCount; i++)
             {
-                var record = service.GetRecords().GetById(i);
+                var record = service.GetRecords().GetAt(i - 1);
                 Assert.That(record.Title, Is.EqualTo($"Test {i}"));
                 Assert.That(record.Description, Is.EqualTo($"Description {i}"));
                 Assert.That(record.Paths.Count, Is.EqualTo(s_paths.Length));

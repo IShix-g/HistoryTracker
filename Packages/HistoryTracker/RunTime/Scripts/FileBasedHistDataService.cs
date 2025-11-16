@@ -12,14 +12,14 @@ namespace HistoryTracker
 {
     internal abstract class FileBasedHistDataService : IHistDataService
     {
-        readonly string _rootDir;
-        readonly string _dataPath;
+        public readonly string RootDir;
+        public readonly string DataPath;
         HistRecords _records;
 
         protected FileBasedHistDataService(string rootDir, string dataPath)
         {
-            _rootDir = rootDir;
-            _dataPath = dataPath;
+            RootDir = rootDir;
+            DataPath = dataPath;
             LoadRecords();
         }
 
@@ -29,11 +29,11 @@ namespace HistoryTracker
         {
             try
             {
-                if (!File.Exists(_dataPath))
+                if (!File.Exists(DataPath))
                 {
                     return;
                 }
-                var bytes = File.ReadAllBytes(_dataPath);
+                var bytes = File.ReadAllBytes(DataPath);
                 var json = Encoding.UTF8.GetString(bytes);
                 _records = JsonUtility.FromJson<HistRecords>(json);
             }
@@ -52,18 +52,18 @@ namespace HistoryTracker
             {
                 throw new InvalidOperationException("Serialization result is invalid. Unable to save.");
             }
-            Directory.CreateDirectory(_rootDir);
+            Directory.CreateDirectory(RootDir);
             var bytes = Encoding.UTF8.GetBytes(json);
-            File.WriteAllBytes(_dataPath, bytes);
+            File.WriteAllBytes(DataPath, bytes);
         }
 
-        public void Delete() => File.Delete(_dataPath);
+        public void Delete() => File.Delete(DataPath);
 
         public void DeleteAll()
         {
-            if (Directory.Exists(_rootDir))
+            if (Directory.Exists(RootDir))
             {
-                Directory.Delete(_rootDir, true);
+                Directory.Delete(RootDir, true);
             }
         }
         
@@ -77,7 +77,7 @@ namespace HistoryTracker
         public void Remove(HistRecord record)
         {
             var id = record.Id;
-            var path = Path.Combine(_rootDir, id);
+            var path = Path.Combine(RootDir, id);
             if (Directory.Exists(path))
             {
                 Directory.Delete(path, true);
@@ -111,7 +111,7 @@ namespace HistoryTracker
             for (var i = 0; i < paths.Count; i++)
             {
                 var source = paths[i];
-                var target = Path.Combine(_rootDir, newFilePaths[i]);
+                var target = Path.Combine(RootDir, newFilePaths[i]);
                 EnsureCopy(source, target);
             }
         }
@@ -149,7 +149,7 @@ namespace HistoryTracker
                             continue;
                         }
 
-                        var source = Path.Combine(_rootDir, recordPath);
+                        var source = Path.Combine(RootDir, recordPath);
                         EnsureCopy(source, path);
                         copied = true;
                         usedPathsFlags[i] = true;

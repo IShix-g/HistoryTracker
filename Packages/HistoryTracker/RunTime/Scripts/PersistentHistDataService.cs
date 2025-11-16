@@ -6,10 +6,12 @@ namespace HistoryTracker
 {
     internal sealed class PersistentHistDataService : FileBasedHistDataService
     {
+        static readonly string s_rootDir = Application.persistentDataPath;
+        
         public PersistentHistDataService(string dirName)
             : base(
-                Path.Combine(Application.persistentDataPath, dirName),
-                Path.Combine(Application.persistentDataPath, dirName, "Records.dat")
+                Path.Combine(s_rootDir, dirName),
+                Path.Combine(s_rootDir, dirName, "Records.dat")
             ) {}
     }
 }

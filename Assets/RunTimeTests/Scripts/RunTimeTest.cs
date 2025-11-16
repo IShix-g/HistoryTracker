@@ -22,7 +22,7 @@ namespace Tests
         {
             // Display a dialog by creating an object and calling OpenDialog.
             var obj = Hist.CreateOrGet();
-            obj.OpenDialog(Hist.Release);
+            obj.OpenDialog();
         }
     }
 }

@@ -9,7 +9,7 @@ namespace HistoryTracker
         public EditorHistDataService(string dirName)
             : base(
                 Path.Combine(Path.GetDirectoryName(Application.dataPath), dirName),
-                Path.Combine(Path.GetDirectoryName(Application.dataPath), dirName, "Records.bytes")
+                Path.Combine(Path.GetDirectoryName(Application.dataPath), dirName, "Records.dat")
             ) {}
     }
 }

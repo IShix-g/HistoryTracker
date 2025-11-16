@@ -10,8 +10,8 @@ namespace HistoryTracker
 {
     public sealed class HistUI : MonoBehaviour
     {
-        public const string ResourcesPathForEditor = "Packages/com.ishix.history.tracker/RunTime/Prefabs/HistoryTracker.prefab";
-        public const string ResourcesPath = "HistoryTracker/HistoryTracker";
+        internal const string ResourcesPathForEditor = "Packages/com.ishix.history.tracker/RunTime/Prefabs/HistoryTracker.prefab";
+        internal const string ResourcesPath = "HistoryTracker/HistoryTracker";
 
         [SerializeField] RecordsHistDialog _dialog;
 

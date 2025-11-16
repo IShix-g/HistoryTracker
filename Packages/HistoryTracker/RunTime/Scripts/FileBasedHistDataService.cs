@@ -40,6 +40,7 @@ namespace HistoryTracker
             finally
             {
                 _records ??= new HistRecords();
+                _records.Initialize();
             }
         }
 

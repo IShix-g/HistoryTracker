@@ -9,7 +9,7 @@ namespace HistoryTracker
         public PersistentHistDataService(string dirName)
             : base(
                 Path.Combine(Application.persistentDataPath, dirName),
-                Path.Combine(Application.persistentDataPath, dirName, "Records.bytes")
+                Path.Combine(Application.persistentDataPath, dirName, "Records.dat")
             ) {}
     }
 }

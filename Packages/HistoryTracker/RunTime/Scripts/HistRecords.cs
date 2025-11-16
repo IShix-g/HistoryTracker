@@ -17,7 +17,7 @@ namespace HistoryTracker
         public int Length => _records.Count;
         public bool HasRecords => Length > 0;
 
-        public HistRecords()
+        public void Initialize()
         {
             if (_machineId != 0)
             {

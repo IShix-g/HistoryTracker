@@ -8,7 +8,7 @@ namespace HistoryTracker
     {
         public readonly string Title;
         public readonly string Description;
-        
+
         public HistRecordInfo(string title, string description)
         {
             Title = title;

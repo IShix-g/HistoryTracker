@@ -44,7 +44,7 @@ jobs:
       BOT_PRIVATE_KEY: ${{ secrets.BOT_PRIVATE_KEY }}
     with:
       ref: ${{ github.event.pull_request.base.ref }}
-      file-path: ./Packages/SmartGitUPM/package.json
+      file-path: ./Packages/HistoryTracker/package.json
       tag: ${{ needs.extract-tag.outputs.tag }}
       dry-run: false
 

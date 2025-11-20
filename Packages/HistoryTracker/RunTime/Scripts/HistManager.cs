@@ -1,19 +1,19 @@
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
-// var rootPath = Application.dataPath + "/../" + HttpPackageInfoFetcher.SgUpmPackageCachePath;
 namespace HistoryTracker
 {
     internal sealed class HistManager
     {
         public event Action<HistRecord> OnAddRecord = delegate {};
         public event Action<HistRecord> OnRemoveRecord = delegate {};
+        public event Action OnStartApply = delegate {};
+        public event Action OnEndApply = delegate {};
         
         public HistRecords Records => _service.GetRecords();
-
+        public bool IsStartApply { get; private set; }
+        
         readonly IHistSaveDataHandler _handler;
         readonly IHistDataService _service;
 
@@ -50,11 +50,25 @@ namespace HistoryTracker
             OnRemoveRecord(record);
         }
 
-        public void Apply(HistRecord record)
+        public void Apply(HistRecord record, Action<bool> onFinished = null)
         {
+            if (IsStartApply)
+            {
+                return;
+            }
+            IsStartApply = true;
             var paths = _handler.GetSaveFilePaths();
-            _service.Apply(record, paths);
-            _handler.ApplyData();
+            OnStartApply();
+            _service.Apply(record, paths, isSuccess =>
+            {
+                IsStartApply = false;
+                onFinished?.Invoke(isSuccess);
+                OnEndApply();
+                if (isSuccess)
+                {
+                    _handler.ApplyData();
+                }
+            });
         }
 
         string GetPathList(HistRecord record)

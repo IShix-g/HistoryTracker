@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections.Generic;
 
 namespace HistoryTracker
@@ -14,6 +15,6 @@ namespace HistoryTracker
         void Remove(HistRecord record);
         HistRecord Set(string recordId, IReadOnlyList<string> paths);
         void Set(HistRecord record, IReadOnlyList<string> paths);
-        void Apply(HistRecord record, IReadOnlyList<string> paths);
+        void Apply(HistRecord record, IReadOnlyList<string> paths, Action<bool> onFinished);
     }
 }

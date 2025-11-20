@@ -12,6 +12,7 @@ namespace HistoryTracker
     {
         internal const string ResourcesPathForEditor = "Packages/com.ishix.history.tracker/RunTime/Prefabs/HistoryTracker.prefab";
         internal const string ResourcesPath = "HistoryTracker/HistoryTracker";
+        internal static readonly string ResourcesFullPath = $"Assets/Resources/{ResourcesPath}.prefab";
 
         [SerializeField] RecordsHistDialog _dialog;
 

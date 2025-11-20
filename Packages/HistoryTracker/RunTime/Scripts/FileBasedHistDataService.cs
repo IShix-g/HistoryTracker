@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Pool;
@@ -16,10 +17,10 @@ namespace HistoryTracker
         public readonly string DataPath;
         HistRecords _records;
 
-        protected FileBasedHistDataService(string rootDir, string dataPath)
+        protected FileBasedHistDataService(string dataPath)
         {
-            RootDir = rootDir;
             DataPath = dataPath;
+            RootDir = Path.GetDirectoryName(dataPath);
             LoadRecords();
         }
 
@@ -34,8 +35,7 @@ namespace HistoryTracker
                     return;
                 }
                 var bytes = File.ReadAllBytes(DataPath);
-                var json = Encoding.UTF8.GetString(bytes);
-                _records = JsonUtility.FromJson<HistRecords>(json);
+                _records = Load(bytes);
             }
             finally
             {
@@ -44,13 +44,19 @@ namespace HistoryTracker
             }
         }
 
+        public static HistRecords Load(byte[] bytes)
+        {
+            var json = Encoding.UTF8.GetString(bytes);
+            return JsonUtility.FromJson<HistRecords>(json);
+        }
+
         public void Save()
         {
             var json = JsonUtility.ToJson(_records);
             if (string.IsNullOrEmpty(json)
                 || json == "[]")
             {
-                throw new InvalidOperationException("Serialization result is invalid. Unable to save.");
+                throw new InvalidOperationException("[HistoryTracker] Serialization result is invalid. Unable to save.");
             }
             Directory.CreateDirectory(RootDir);
             var bytes = Encoding.UTF8.GetBytes(json);
@@ -66,7 +72,7 @@ namespace HistoryTracker
                 Directory.Delete(RootDir, true);
             }
         }
-        
+
         public HistRecord Add(IReadOnlyList<string> paths)
         {
             var record = _records.Create();
@@ -84,26 +90,25 @@ namespace HistoryTracker
             }
             _records.Remove(record);
         }
-        
+
         public HistRecord Set(string recordId, IReadOnlyList<string> paths)
         {
             var record = _records.GetOrCreateById(recordId);
             Set(record, paths);
             return record;
         }
-        
+
         public void Set(HistRecord record, IReadOnlyList<string> paths)
         {
             Assert.IsTrue(_records.HasRecord(record.Id));
             var dir = record.Id;
-            
             var rootPathLength = Application.persistentDataPath.Length;
             var newFilePaths = paths.Select(p =>
             {
-                var relPath = p.StartsWith(Application.persistentDataPath)
+                var relativePath = p.StartsWith(Application.persistentDataPath)
                     ? p.Substring(rootPathLength).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
                     : Path.GetFileName(p);
-                return Path.Combine(dir, relPath);
+                return Path.Combine(dir, relativePath);
             }).ToList();
 
             record.Paths = newFilePaths;
@@ -115,17 +120,22 @@ namespace HistoryTracker
                 EnsureCopy(source, target);
             }
         }
-        
-        public void Apply(HistRecord record, IReadOnlyList<string> paths)
+
+        public void Apply(HistRecord record, IReadOnlyList<string> paths, Action<bool> onFinished = null)
+            => ApplyAsync(record, paths)
+                .Handled(_ => onFinished?.Invoke(true), _ => onFinished?.Invoke(false));
+
+        public async Task ApplyAsync(HistRecord record, IReadOnlyList<string> paths)
         {
             var idString = record.Id;
             var notAppliedRecordPaths = ListPool<string>.Get();
             var unusedPaths = ListPool<string>.Get();
+            var tasks = ListPool<Task>.Get();
             
             try
             {
                 var usedPathsFlags = new bool[paths.Count];
-
+                
                 foreach (var recordPath in record.Paths)
                 {
                     if (!recordPath.StartsWith(idString, StringComparison.Ordinal))
@@ -133,7 +143,7 @@ namespace HistoryTracker
                         notAppliedRecordPaths.Add(recordPath);
                         continue;
                     }
-                    
+
                     var relativePath = recordPath.Substring(idString.Length)
                         .TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 
@@ -141,16 +151,27 @@ namespace HistoryTracker
                     for (var i = 0; i < paths.Count; i++)
                     {
                         var path = paths[i];
-                        var normalizedPath = path
-                            .Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
-                        
+                        var normalizedPath = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
                         if (!normalizedPath.EndsWith(relativePath, StringComparison.Ordinal))
                         {
                             continue;
                         }
 
-                        var source = Path.Combine(RootDir, recordPath);
-                        EnsureCopy(source, path);
+                        var sourcePath = Path.Combine(RootDir, recordPath);
+#if !UNITY_EDITOR
+                        if (record.IsStreamingAssets
+                            && !File.Exists(sourcePath))
+                        {
+                            sourcePath = StreamingAssetsRecordsInstaller.GetFullPath(recordPath);
+                            var bytes = await StreamingAssetsRecordsInstaller.LoadBytes(sourcePath);
+                            var task = File.WriteAllBytesAsync(path, bytes);
+                            tasks.Add(task);
+                        }
+                        else
+#endif
+                        {
+                            EnsureCopy(sourcePath, path);
+                        }
                         copied = true;
                         usedPathsFlags[i] = true;
                         break;
@@ -161,7 +182,7 @@ namespace HistoryTracker
                         notAppliedRecordPaths.Add(recordPath);
                     }
                 }
-                
+
                 for (var i = 0; i < paths.Count; i++)
                 {
                     if (!usedPathsFlags[i])
@@ -169,26 +190,32 @@ namespace HistoryTracker
                         unusedPaths.Add(paths[i]);
                     }
                 }
+
+                if (tasks.Count > 0)
+                {
+                    await Task.WhenAll(tasks);
+                }
             }
             finally
             {
                 if (notAppliedRecordPaths.Count > 0)
                 {
                     Debug.LogWarning(
-                        $"Some elements in record.Paths were not copied during Apply. record.Id={record.Id}\n" +
+                        $"[HistoryTracker] Some elements in record.Paths were not copied during Apply. record.Id={record.Id}\n" +
                         string.Join("\n", notAppliedRecordPaths));
                 }
                 if (unusedPaths.Count > 0)
                 {
                     Debug.LogWarning(
-                        $"Some elements in paths were not used during Apply. record.Id={record.Id}\n" +
+                        $"[HistoryTracker] Some elements in paths were not used during Apply. record.Id={record.Id}\n" +
                         string.Join("\n", unusedPaths));
                 }
                 ListPool<string>.Release(notAppliedRecordPaths);
                 ListPool<string>.Release(unusedPaths);
+                ListPool<Task>.Release(tasks);
             }
         }
-
+        
         void EnsureCopy(string source, string target)
         {
             var targetDir = Path.GetDirectoryName(target);

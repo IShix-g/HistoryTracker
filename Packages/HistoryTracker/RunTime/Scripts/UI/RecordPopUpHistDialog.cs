@@ -21,6 +21,9 @@ namespace HistoryTracker
         [SerializeField] InputField _descriptionInput;
         [SerializeField] HistRecordObjectShower _titleShower;
         [SerializeField] HistRecordObjectShower _descriptionShower;
+        [SerializeField] RectTransform _caution;
+        [SerializeField] RectTransform _editorIcon;
+        
         
         public HistRecord Record { get; private set; }
         
@@ -52,6 +55,18 @@ namespace HistoryTracker
             
             _titleInput.gameObject.SetActive(false);
             _descriptionInput.gameObject.SetActive(false);
+
+#if UNITY_EDITOR
+            _titleShower.enabled = true;
+            _descriptionShower.enabled = true;
+            _caution.gameObject.SetActive(false);
+            _editorIcon.gameObject.SetActive(true);
+#else
+            _titleShower.enabled = !Record.IsStreamingAssets;
+            _descriptionShower.enabled = !Record.IsStreamingAssets;
+            _caution.gameObject.SetActive(Record.IsStreamingAssets);
+            _editorIcon.gameObject.SetActive(Record.IsStreamingAssets);
+#endif
         }
 
         protected override void OnCloseInternal(bool isAwake) {}

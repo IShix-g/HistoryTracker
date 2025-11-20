@@ -11,18 +11,24 @@ namespace HistoryTracker
     [Serializable]
     internal sealed class HistRecords : IEnumerable<HistRecord>
     {
-        [SerializeField] List<HistRecord> _records = new ();
+        [SerializeField] List<HistRecord> _records;
         [SerializeField] int _machineId;
         
         public int Length => _records.Count;
         public bool HasRecords => Length > 0;
+        public int MachineId => _machineId;
 
         public void Initialize()
         {
-            if (_machineId != 0)
+            _records ??= new List<HistRecord>();
+            if (_machineId == 0)
             {
-                return;
+                SetNewMachineId();
             }
+        }
+
+        public void SetNewMachineId()
+        {
             var guid = Guid.NewGuid();
             var seed = guid.GetHashCode();
             var random = new Random(seed);
@@ -36,16 +42,30 @@ namespace HistoryTracker
         public HistRecord GetReverseAt(int index) => _records[(_records.Count - 1) - index];
 
         public HistRecord GetById(string id) => _records.Find(x => x.Id == id);
-
+        
         public HistRecord Create()
         {
-            var id = HistIdGenerator.NewId(_machineId);
+            var id = IdGenerator.NewId(_machineId);
             var record = new HistRecord(id)
             {
                 TimeStamp = DateTime.Now.ToUniversalTime().ToString("o")
             };
             _records.Add(record);
             return record;
+        }
+
+        public void AddOrSet(HistRecord record)
+        {
+            Assert.IsFalse(string.IsNullOrEmpty(record.Id));
+            var index = _records.FindIndex(x => x.Id == record.Id);
+            if (index >= 0)
+            {
+                _records[index] = record;
+            }
+            else
+            {
+                _records.Add(record);
+            }
         }
 
         public HistRecord GetOrCreateById(string id)
@@ -76,6 +96,7 @@ namespace HistoryTracker
         public string Description;
         public List<string> Paths = new ();
         public string TimeStamp;
+        public bool IsStreamingAssets;
 
         public HistRecord(string id)
         {

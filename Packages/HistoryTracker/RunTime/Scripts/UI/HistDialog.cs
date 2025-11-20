@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HistoryTracker
 {
-    public abstract class HistDialog : MonoBehaviour
+    internal abstract class HistDialog : MonoBehaviour
     {
         public event Action OnOpened = delegate {};
         public event Action OnClosed = delegate {};

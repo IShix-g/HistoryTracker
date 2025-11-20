@@ -33,8 +33,10 @@ namespace HistoryTracker
             _manager = manager;
             _manager.OnAddRecord += OnAddRecord;
             _manager.OnRemoveRecord += OnRemoveRecord;
+            _manager.OnStartApply += OnStartApply;
+            _manager.OnEndApply += OnEndApply;
         }
-        
+
         void Start()
         {
             foreach (var content in _contents)
@@ -52,12 +54,14 @@ namespace HistoryTracker
 
         void OnDestroy()
         {
-            if (_manager != null)
+            if (_manager == null)
             {
-                _manager.OnAddRecord -= OnAddRecord;
-                _manager.OnRemoveRecord -= OnRemoveRecord;
-                _manager.Save();
+                return;
             }
+            _manager.OnAddRecord -= OnAddRecord;
+            _manager.OnRemoveRecord -= OnRemoveRecord;
+            _manager.OnStartApply -= OnStartApply;
+            _manager.OnEndApply -= OnEndApply;
         }
 
         public void Open(Action closeAction = null)
@@ -65,7 +69,7 @@ namespace HistoryTracker
             _closeAction = closeAction;
             OpenDialog();
         }
-        
+
         protected override void OnOpenInternal()
         {
             _bg.gameObject.SetActive(true);
@@ -123,11 +127,11 @@ namespace HistoryTracker
                 var content = _contents[index];
                 content.gameObject.SetActive(false);
             }
-            
+
             _nextButton.gameObject.SetActive(_pager.HasNext);
             _prevButton.gameObject.SetActive(_pager.HasPrev);
         }
-        
+
         void OnClickContent(HistRecord record) => _recordPopUp.Open(record);
 
         void OnAddRecord(HistRecord record)
@@ -141,6 +145,22 @@ namespace HistoryTracker
             var length = _manager.Records.Length;
             _pager.UpdateLength(length);
             LoadContents();
+        }
+
+        void OnStartApply()
+        {
+            _saveButton.interactable = false;
+            _closeButton.interactable = false;
+            _nextButton.interactable = false;
+            _prevButton.interactable = false;
+        }
+
+        void OnEndApply()
+        {
+            _saveButton.interactable = true;
+            _closeButton.interactable = true;
+            _nextButton.interactable = true;
+            _prevButton.interactable = true;
         }
 
         void OnSaveButtonClicked()
@@ -157,7 +177,7 @@ namespace HistoryTracker
                 LoadContents();
             }
         }
-        
+
         void OnPrevButtonClicked()
         {
             if (_pager.HasPrev)
@@ -166,11 +186,16 @@ namespace HistoryTracker
                 LoadContents();
             }
         }
-        
+
         void PopUpOnRestore(HistRecord record)
         {
-            _manager.Apply(record);
-            Close();
+            _manager.Apply(record, isSuccess =>
+            {
+                if (isSuccess)
+                {
+                    Close();
+                }
+            });
         }
 
         void PopUpOnDelete(HistRecord record)
@@ -186,6 +211,7 @@ namespace HistoryTracker
                 if(content.Record == record)
                 {
                     content.UpdateContent();
+                    _manager.Save();
                     break;
                 }
             }

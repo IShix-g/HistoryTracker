@@ -1,0 +1,18 @@
+{
+    "name": "HistoryTracker.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:639b657a2f63f4c0db183b489a20d697"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

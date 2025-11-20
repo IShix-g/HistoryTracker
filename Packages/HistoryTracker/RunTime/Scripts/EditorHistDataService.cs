@@ -6,12 +6,10 @@ namespace HistoryTracker
 {
     internal sealed class EditorHistDataService : FileBasedHistDataService
     {
-        static readonly string s_rootDir = Path.GetDirectoryName(Application.dataPath);
-        
         public EditorHistDataService(string dirName)
-            : base(
-                Path.Combine(s_rootDir, dirName),
-                Path.Combine(s_rootDir, dirName, "Records.dat")
-            ) {}
+            : base(GetDataPath(dirName)) {}
+
+        public static string GetDataPath(string dirName)
+            => Path.Combine(Path.GetDirectoryName(Application.dataPath), dirName, Hist.RecordsFileName);
     }
 }

@@ -1,4 +1,5 @@
 
+using System.Threading;
 using UnityEditor;
 using UnityEngine;
 
@@ -13,7 +14,7 @@ namespace HistoryTracker.Editor
         const string _packageName = "com.ishix.history.tracker";
         const string _logoPath = PackagePath + "Editor/historyTrackerLogo.png";
         
-        [MenuItem("Window/HistoryTracker/open Settings")]
+        [MenuItem("Window/HistoryTracker/open Settings", priority = 0)]
         static void ShowWindow()
         {
             var window = GetWindow<HistSettingsWindow>();
@@ -21,37 +22,104 @@ namespace HistoryTracker.Editor
             window.Show();
         }
 
+        readonly PackageVersionChecker _versionChecker = new (_gitInstallUrl, _gitBranchName, _packageName);
         SerializedObject _settingsObject;
         Texture2D _logo;
+        GUIContent _updateIcon;
+        GUIContent _helpHeader;
+        bool _hasNewVersion;
+        CancellationTokenSource _tokenSource;
 
         void OnEnable()
         {
             _logo = AssetDatabase.LoadAssetAtPath<Texture2D>(_logoPath);
+            _updateIcon = EditorGUIUtility.IconContent("CloudConnect");
+            _helpHeader = EditorGUIUtility.IconContent("Help");
             var setting = HistSettings.Current;
             _settingsObject = new SerializedObject(setting);
+            _versionChecker.Fetch().Handled(_ =>
+            {
+                _hasNewVersion = _versionChecker.HasNewVersion();
+            });
         }
 
         void OnDestroy()
         {
             _logo = null;
+            _updateIcon = null;
+            _helpHeader = null;
+            _settingsObject.Dispose();
+            _versionChecker?.Dispose();
+            _tokenSource?.SafeCancelAndDispose();
         }
-        
+ 
         void OnGUI()
         {
             {
                 var style = new GUIStyle(GUI.skin.label)
                 {
                     padding = new RectOffset(10, 10, 10, 10),
+                    margin = new RectOffset(0, 0, 0, 10),
                 };
                 GUILayout.BeginVertical(style);
+            }
+            EditorGUI.BeginDisabledGroup(_versionChecker.IsProcessing);
+            {
+                var style = new GUIStyle()
+                {
+                    padding = new RectOffset(5, 5, 5, 5),
+                    margin = new RectOffset(0, 0, 0, 5),
+                };
+                GUILayout.BeginHorizontal(style);
+            }
+            var width = GUILayout.Width(33);
+            var height = GUILayout.Height(EditorGUIUtility.singleLineHeight + 5);
+            var clickedGitHub = GUILayout.Button(_helpHeader, width, height);
+            var clickedDialog = GUILayout.Button("open Records dialog (Play mode only)", height);
+            GUILayout.EndHorizontal();
+            EditorGUI.EndDisabledGroup();
+
+            if (clickedGitHub)
+            {
+                Application.OpenURL(_gitURL);
+            }
+            else if (clickedDialog)
+            {
+                RecordPopUpHistDialogButton.ShowDialog();
+            }
+
+            if(_versionChecker.IsLoaded
+               && !_versionChecker.IsProcessing
+               && _hasNewVersion)
+            {
+                var style = new GUIStyle(GUI.skin.box)
+                {
+                    padding = new RectOffset(10, 10, 10, 10),
+                };
+                var textStyle = new GUIStyle(GUI.skin.label)
+                {
+                    richText = true,
+                };
+                GUILayout.BeginHorizontal(style);
+                GUILayout.Label(_updateIcon, GUILayout.Width(20), GUILayout.Height(20));
+                var version = "<b>Ver. " + _versionChecker.ServerInfo.version + "</b> is now available";
+                GUILayout.Label(version, textStyle);
+                var clickedVersion = GUILayout.Button("Update", GUILayout.Width(80));
+                GUILayout.EndHorizontal();
+                
+                if(clickedVersion)
+                {
+                    _versionChecker.Install(_tokenSource.Token);
+                    _hasNewVersion = false;
+                }
             }
             {
                 var style = new GUIStyle(GUI.skin.label)
                 {
                     alignment = TextAnchor.MiddleCenter,
+                    margin = new RectOffset(0, 0, 0, 10)
                 };
                 GUILayout.Label(_logo, style, GUILayout.MinWidth(400), GUILayout.Height(60.5f));
-                GUILayout.Space(10);
             }
             
             _settingsObject.Update();
@@ -62,7 +130,17 @@ namespace HistoryTracker.Editor
                 EditorGUILayout.PropertyField(property, true);
             }
             _settingsObject.ApplyModifiedProperties();
-            
+
+            {
+                var style = new GUIStyle(GUI.skin.label)
+                {
+                    alignment = TextAnchor.MiddleRight,
+                    margin = new RectOffset(0, 0, 10, 0)
+                };
+                var pluginVersion = _versionChecker.IsLoaded ? _versionChecker.LocalInfo.VersionString : "---";
+                GUILayout.Label("Ver. " + pluginVersion, style);
+            }
+
             GUILayout.EndVertical();
         }
     }

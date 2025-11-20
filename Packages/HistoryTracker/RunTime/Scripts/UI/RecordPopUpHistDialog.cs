@@ -24,7 +24,6 @@ namespace HistoryTracker
         [SerializeField] RectTransform _caution;
         [SerializeField] RectTransform _editorIcon;
         
-        
         public HistRecord Record { get; private set; }
         
         void Start()

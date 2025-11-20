@@ -1,0 +1,469 @@
+# EditorConfig is awesome: https://editorconfig.org
+# IDE0055 reports many issues related to spaces and line breaks, so it is disabled.
+
+# top-most EditorConfig file
+root = true
+
+# General
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+indent_style = space
+indent_size = 2
+
+[*.cs]
+trim_trailing_whitespace = true
+insert_final_newline = true
+indent_style = space
+indent_size = 4
+tab_width = 4
+
+# Always insert a newline before opening braces '{'
+csharp_new_line_before_open_brace = all
+
+# switch case Indent the content.
+csharp_indent_case_contents = true
+# Indent switch label
+csharp_indent_switch_labels = true
+# Indent label
+csharp_indent_labels = flush_left
+# Indent the contents of the block.
+csharp_indent_block_contents = true
+# Ensure opening and closing braces are indented correctly
+csharp_indent_braces = false
+# Indent the statement list and curly braces in the case of a switch statement.
+csharp_indent_case_contents_when_block = false
+
+# Insert spaces after cast operators
+csharp_space_after_cast = true
+# Insert a space after control flow keywords ('if', 'while', 'for', etc.)
+csharp_space_after_keywords_in_control_flow_statements = true
+# Do not insert spaces within parentheses '()'
+csharp_space_between_parentheses = false
+# Insert a space before colons ':' in inheritance clauses
+csharp_space_before_colon_in_inheritance_clause = true
+# Insert spaces after colons ':' in inheritance clauses
+csharp_space_after_colon_in_inheritance_clause = true
+# Do not insert a space before commas ','
+csharp_space_before_comma = false
+# Insert a space after commas ','
+csharp_space_after_comma = true
+# Do not insert a space before dots '.'
+csharp_space_before_dot = false
+# Do not insert a space after dots '.'
+csharp_space_after_dot = false
+# Insert a space after semicolons ';' in 'for' statements
+csharp_space_after_semicolon_in_for_statement = true
+# Insert spaces before and after binary operators
+csharp_space_around_binary_operators = before_and_after
+# Do not insert a space before open square brackets '['
+csharp_space_before_open_square_brackets = false
+# Do not insert a space before semicolons ';' in 'for' statements
+csharp_space_before_semicolon_in_for_statement = false
+# Do not insert spaces inside empty square brackets '[]'
+csharp_space_between_empty_square_brackets = false
+# Do not insert spaces within empty parameter lists in method calls
+csharp_space_between_method_call_empty_parameter_list_parentheses = false
+# Do not insert a space between method names and opening parentheses '('
+csharp_space_between_method_call_name_and_opening_parenthesis = false
+# Do not insert spaces inside parameter list parentheses in method calls
+csharp_space_between_method_call_parameter_list_parentheses = false
+# Do not insert spaces within empty parameter lists in method declarations
+csharp_space_between_method_declaration_empty_parameter_list_parentheses = false
+# Do not insert a space between method names and opening parentheses '(' in declarations
+csharp_space_between_method_declaration_name_and_open_parenthesis = false
+# Do not insert spaces inside parameter list parentheses in method declarations
+csharp_space_between_method_declaration_parameter_list_parentheses = false
+# Do not insert spaces within square brackets '[]'
+csharp_space_between_square_brackets = false
+
+# Display multiple statements and member declarations on a single line
+csharp_preserve_single_line_statements = false
+# Allow code blocks to remain on a single line if they fit
+csharp_preserve_single_line_blocks = true
+
+# Recommend using type inference ('var') for variable declarations
+csharp_style_var_elsewhere = true:suggestion
+# Recommend using type inference ('var') for built-in types (e.g., 'int')
+csharp_style_var_for_built_in_types = true:suggestion
+# Recommend using type inference ('var') when the type is apparent
+csharp_style_var_when_type_is_apparent = true:suggestion
+
+# Always use braces for control structures
+csharp_prefer_braces = true:warning
+csharp_prefer_simple_using_statement = true:warning
+
+# Prefer omitting 'private' access modifier for fields and methods
+dotnet_style_require_accessibility_modifiers = never:warning
+# Avoid requiring explicit qualifiers (e.g., `this.`) when accessing events.
+dotnet_style_qualification_for_event = false:suggestion
+# Avoid requiring explicit qualifiers (e.g., `this.`) when accessing fields.
+dotnet_style_qualification_for_field = false:suggestion
+# Avoid requiring explicit qualifiers (e.g., `this.`) when accessing methods.
+dotnet_style_qualification_for_method = false:suggestion
+# Avoid requiring explicit qualifiers (e.g., `this.`) when accessing properties.
+dotnet_style_qualification_for_property = false:suggestion
+
+
+# Add braces (`{}`) to if or while statements
+dotnet_diagnostic.IDE0011.severity = warning
+# Object initializer can be simplified.
+dotnet_diagnostic.IDE0017.severity = none
+# Collection initialization can be simplified.
+dotnet_diagnostic.IDE0028.severity = none
+# Simplify built-in type names.
+dotnet_diagnostic.IDE0049.severity = warning
+# Format code consistently.
+dotnet_diagnostic.IDE0055.severity = none
+# Naming rule violation
+dotnet_diagnostic.IDE1006.severity = error
+# Keywords must be spaced correctly.
+dotnet_diagnostic.SA1000.severity = none
+# Commas should be spaced correctly.
+dotnet_diagnostic.SA1001.severity = none
+# Semicolons should be spaced correctly.
+dotnet_diagnostic.SA1002.severity = none
+# Binary operators should be spaced correctly.
+dotnet_diagnostic.SA1003.severity = none
+# Documentation lines should not begin with a space.
+dotnet_diagnostic.SA1004.severity = none
+# Single-line comments should begin with a space.
+dotnet_diagnostic.SA1005.severity = none
+# Preprocessor directives should not be preceded by space.
+dotnet_diagnostic.SA1006.severity = none
+# Closing parenthesis should not be preceded by a space.
+dotnet_diagnostic.SA1009.severity = none
+# Use spaces instead of tabs for indentations.
+dotnet_diagnostic.SA1027.severity = warning
+# Code must not contain trailing whitespace.
+dotnet_diagnostic.SA1028.severity = none
+# Enforces the use of the `this` keyword when referencing instance members of a class to improve clarity.
+dotnet_diagnostic.SA1101.severity = none
+# Closing parenthesis should be on line of last parameter
+dotnet_diagnostic.SA1111.severity = none
+# Use string.Empty for empty strings
+dotnet_diagnostic.SA1122.severity = warning
+# Elements should have the same indentation
+dotnet_diagnostic.SA1137.severity = warning
+# Using directives should be placed correctly (either top of file or inside namespace).
+dotnet_diagnostic.SA1200.severity = none
+# Static elements should appear before instance elements.
+dotnet_diagnostic.SA1201.severity = none
+# Elements must be ordered by access level (public, internal, protected, private).
+dotnet_diagnostic.SA1202.severity = none
+# Constants must appear before fields.
+dotnet_diagnostic.SA1203.severity = none
+# Static read-only fields must appear before static read/write fields.
+dotnet_diagnostic.SA1204.severity = none
+# Partial elements should be declared last.
+dotnet_diagnostic.SA1205.severity = none
+# Declared accessibility must be ordered (e.g., public before internal, etc.)
+dotnet_diagnostic.SA1206.severity = none
+# The "this." prefix should be used consistently in the code base.
+dotnet_diagnostic.SA1208.severity = none
+# Readonly fields should appear before non-readonly fields
+dotnet_diagnostic.SA1214.severity = none
+# Class, method, and member names should start with an uppercase letter.
+dotnet_diagnostic.SA1300.severity = none
+# Interface names must begin with an `I`
+dotnet_diagnostic.SA1302.severity = none
+# Fields should use camelCase naming style.
+dotnet_diagnostic.SA1306.severity = none
+# Field names should not use the "m_" prefix.
+dotnet_diagnostic.SA1307.severity = none
+# Local variables should not use underscores in their names.
+dotnet_diagnostic.SA1308.severity = none
+# Elements should be named in PascalCase, except for certain exceptional cases.
+dotnet_diagnostic.SA1309.severity = none
+# Static members should not use underscores in their names.
+dotnet_diagnostic.SA1311.severity = none
+# Parameter names should begin with a lowercase letter.
+dotnet_diagnostic.SA1312.severity = warning
+# Access modifier should always be specified explicitly.
+dotnet_diagnostic.SA1400.severity = none
+# Fields must be private.
+dotnet_diagnostic.SA1401.severity = none
+# File may only contain a single class, struct, or interface.
+dotnet_diagnostic.SA1402.severity = none
+# File should contain a single namespace declaration.
+dotnet_diagnostic.SA1403.severity = none
+# Braces, indentation, and spacing should follow the standard pattern.
+dotnet_diagnostic.SA1500.severity = warning
+# While, for, do, and if-else statements must use braces.
+dotnet_diagnostic.SA1502.severity = none
+# All control blocks should use braces (e.g., if, for, while).
+dotnet_diagnostic.SA1503.severity = warning
+# Optional: Re-enable specific diagnostics
+dotnet_diagnostic.SA1505.severity = none
+# Elements should be separated by blank line.
+dotnet_diagnostic.SA1507.severity = none
+# Ensures no blank lines appear before closing braces.
+dotnet_diagnostic.SA1508.severity = none
+# Single-line comment should be formatted correctly.
+dotnet_diagnostic.SA1511.severity = none
+# All files must end with a single newline.
+dotnet_diagnostic.SA1512.severity = none
+# Closing brace should be followed by blank line
+dotnet_diagnostic.SA1513.severity = none
+# Blank lines should be properly used within methods.
+dotnet_diagnostic.SA1515.severity = none
+# One or more adjacent elements must not be missing blank lines.
+dotnet_diagnostic.SA1516.severity = none
+# No blank lines should exist at the start of the file
+dotnet_diagnostic.SA1517.severity = none
+# Elements must have XML documentation.
+dotnet_diagnostic.SA1600.severity = none
+# XML headers must contain summary tags.
+dotnet_diagnostic.SA1601.severity = none
+# All enumeration items must be documented.
+dotnet_diagnostic.SA1602.severity = none
+# All exception types must be documented in XML.
+dotnet_diagnostic.SA1612.severity = none
+# Properties must have appropriate XML documentation.
+dotnet_diagnostic.SA1613.severity = none
+# Missing required file header comment at the top of the file
+dotnet_diagnostic.SA1633.severity = none
+# The file name should match the first defined type (e.g., class or struct name)
+dotnet_diagnostic.SA1649.severity = none
+# Field names must not match the names of methods.
+dotnet_diagnostic.SA1700.severity = none
+# Dispose objects according to IDisposable pattern.
+dotnet_diagnostic.SA2000.severity = none
+# Use correct behavior for bitwise or logical operators.
+dotnet_diagnostic.SA2010.severity = none
+# Async methods must have "Async" suffix in their names.
+dotnet_diagnostic.SA3000.severity = none
+# Reserved for custom or experimental rules.
+dotnet_diagnostic.SA9001.severity = none
+# Reserved for custom or experimental rules.
+dotnet_diagnostic.SA9002.severity = none
+
+
+# C# Naming Rules (Classes and Interfaces) =================
+
+# Public classes
+dotnet_naming_rule.public_classes.style = pascal_case
+dotnet_naming_rule.public_classes.symbols = public_classes
+dotnet_naming_rule.public_classes.severity = error
+dotnet_naming_symbols.public_classes.applicable_kinds = class
+dotnet_naming_symbols.public_classes.applicable_accessibilities = public
+# Internal classes
+dotnet_naming_rule.internal_classes.style = pascal_case
+dotnet_naming_rule.internal_classes.symbols = internal_classes
+dotnet_naming_rule.internal_classes.severity = error
+dotnet_naming_symbols.internal_classes.applicable_kinds = class
+dotnet_naming_symbols.internal_classes.applicable_accessibilities = internal
+# Private classes
+dotnet_naming_rule.private_classes.style = pascal_case
+dotnet_naming_rule.private_classes.symbols = private_classes
+dotnet_naming_rule.private_classes.severity = error
+dotnet_naming_symbols.private_classes.applicable_kinds = class
+dotnet_naming_symbols.private_classes.applicable_accessibilities = private
+# Interfaces
+dotnet_naming_rule.interfaces.style = interface_pascal_case
+dotnet_naming_rule.interfaces.symbols = interfaces
+dotnet_naming_rule.interfaces.severity = error
+dotnet_naming_symbols.interfaces.applicable_kinds = interface
+
+# C# Naming Rules (Constants) =================
+
+# Public constants
+dotnet_naming_rule.public_constants.style = pascal_case
+dotnet_naming_rule.public_constants.symbols = public_constants
+dotnet_naming_rule.public_constants.severity = error
+dotnet_naming_symbols.public_constants.applicable_kinds = field
+dotnet_naming_symbols.public_constants.applicable_accessibilities = public
+dotnet_naming_symbols.public_constants.required_modifiers = const
+# Internal constants
+dotnet_naming_rule.internal_constants.style = pascal_case
+dotnet_naming_rule.internal_constants.symbols = internal_constants
+dotnet_naming_rule.internal_constants.severity = error
+dotnet_naming_symbols.internal_constants.applicable_kinds = field
+dotnet_naming_symbols.internal_constants.applicable_accessibilities = internal
+dotnet_naming_symbols.internal_constants.required_modifiers = const
+# Private constants
+dotnet_naming_rule.private_constants.style = camel_case_with_underscore
+dotnet_naming_rule.private_constants.symbols = private_constants
+dotnet_naming_rule.private_constants.severity = error
+dotnet_naming_symbols.private_constants.applicable_kinds = field
+dotnet_naming_symbols.private_constants.applicable_accessibilities = private
+dotnet_naming_symbols.private_constants.required_modifiers = const
+
+# C# Naming Rules (Fields) =================
+
+# Public fields
+dotnet_naming_rule.public_fields.style = pascal_case
+dotnet_naming_rule.public_fields.symbols = public_fields
+dotnet_naming_rule.public_fields.severity = error
+dotnet_naming_symbols.public_fields.applicable_kinds = field
+dotnet_naming_symbols.public_fields.applicable_accessibilities = public
+# Protected fields
+dotnet_naming_rule.protected_fields.style = pascal_case
+dotnet_naming_rule.protected_fields.symbols = protected_fields
+dotnet_naming_rule.protected_fields.severity = error
+dotnet_naming_symbols.protected_fields.applicable_kinds = field
+dotnet_naming_symbols.protected_fields.applicable_accessibilities = protected
+# Private fields
+dotnet_naming_rule.private_fields.style = camel_case_with_underscore
+dotnet_naming_rule.private_fields.symbols = private_fields
+dotnet_naming_rule.private_fields.severity = error
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+
+# C# Naming Rules (Static fields) =================
+
+# Public static fields
+dotnet_naming_rule.public_static_fields.style = pascal_case
+dotnet_naming_rule.public_static_fields.symbols = public_static_fields
+dotnet_naming_rule.public_static_fields.severity = error
+dotnet_naming_symbols.public_static_fields.applicable_kinds = field
+dotnet_naming_symbols.public_static_fields.applicable_accessibilities = public
+dotnet_naming_symbols.public_static_fields.required_modifiers = static
+# Protected static fields
+dotnet_naming_rule.protected_static_fields.style = pascal_case
+dotnet_naming_rule.protected_static_fields.symbols = protected_static_fields
+dotnet_naming_rule.protected_static_fields.severity = error
+dotnet_naming_symbols.protected_static_fields.applicable_kinds = field
+dotnet_naming_symbols.protected_static_fields.applicable_accessibilities = protected
+dotnet_naming_symbols.protected_static_fields.required_modifiers = static
+# Private static fields
+dotnet_naming_rule.private_static_fields.style = camel_case_with_s
+dotnet_naming_rule.private_static_fields.symbols = private_static_fields
+dotnet_naming_rule.private_static_fields.severity = error
+dotnet_naming_symbols.private_static_fields.applicable_kinds = field
+dotnet_naming_symbols.private_static_fields.applicable_accessibilities = private
+dotnet_naming_symbols.private_static_fields.required_modifiers = static
+
+# C# Naming Rules (Static readonly fields) =================
+
+# Public static readonly fields
+dotnet_naming_rule.public_static_readonly_fields.style = pascal_case
+dotnet_naming_rule.public_static_readonly_fields.symbols = public_static_readonly_fields
+dotnet_naming_rule.public_static_readonly_fields.severity = error
+dotnet_naming_symbols.public_static_readonly_fields.applicable_kinds = field
+dotnet_naming_symbols.public_static_readonly_fields.applicable_accessibilities = public
+dotnet_naming_symbols.public_static_readonly_fields.required_modifiers = static, readonly
+# Protected static readonly fields
+dotnet_naming_rule.protected_static_readonly_fields.style = pascal_case
+dotnet_naming_rule.protected_static_readonly_fields.symbols = protected_static_readonly_fields
+dotnet_naming_rule.protected_static_readonly_fields.severity = error
+dotnet_naming_symbols.protected_static_readonly_fields.applicable_kinds = field
+dotnet_naming_symbols.protected_static_readonly_fields.applicable_accessibilities = protected
+dotnet_naming_symbols.protected_static_readonly_fields.required_modifiers = static, readonly
+# Private static readonly fields
+dotnet_naming_rule.private_static_readonly_fields.style = camel_case_with_s
+dotnet_naming_rule.private_static_readonly_fields.symbols = private_static_readonly_fields
+dotnet_naming_rule.private_static_readonly_fields.severity = error
+dotnet_naming_symbols.private_static_readonly_fields.applicable_kinds = field
+dotnet_naming_symbols.private_static_readonly_fields.applicable_accessibilities = private
+dotnet_naming_symbols.private_static_readonly_fields.required_modifiers = static, readonly
+
+# C# Naming Rules (Properties) =================
+
+# Public properties
+dotnet_naming_rule.public_properties.style = pascal_case
+dotnet_naming_rule.public_properties.symbols = public_properties
+dotnet_naming_rule.public_properties.severity = error
+dotnet_naming_symbols.public_properties.applicable_kinds = property
+dotnet_naming_symbols.public_properties.applicable_accessibilities = public
+# Protected properties
+dotnet_naming_rule.protected_properties.style = pascal_case
+dotnet_naming_rule.protected_properties.symbols = protected_properties
+dotnet_naming_rule.protected_properties.severity = error
+dotnet_naming_symbols.protected_properties.applicable_kinds = property
+dotnet_naming_symbols.protected_properties.applicable_accessibilities = protected
+# Private properties
+dotnet_naming_rule.private_properties.style = pascal_case
+dotnet_naming_rule.private_properties.symbols = private_properties
+dotnet_naming_rule.private_properties.severity = error
+dotnet_naming_symbols.private_properties.applicable_kinds = property
+dotnet_naming_symbols.private_properties.applicable_accessibilities = private
+
+# C# Naming Rules (Methods and Local variables) =================
+
+# Methods
+dotnet_naming_rule.methods.style = pascal_case
+dotnet_naming_rule.methods.symbols = methods
+dotnet_naming_rule.methods.severity = error
+dotnet_naming_symbols.methods.applicable_kinds = method
+# Protected methods
+dotnet_naming_rule.protected_methods.style = pascal_case
+dotnet_naming_rule.protected_methods.symbols = protected_methods
+dotnet_naming_rule.protected_methods.severity = error
+dotnet_naming_symbols.protected_methods.applicable_kinds = method
+dotnet_naming_symbols.protected_methods.applicable_accessibilities = protected
+# Local variables
+dotnet_naming_rule.local_variables.style = camel_case
+dotnet_naming_rule.local_variables.symbols = locals
+dotnet_naming_rule.local_variables.severity = error
+dotnet_naming_symbols.locals.applicable_kinds = local
+
+# C# Naming Rules (Events and Enums) =================
+
+# Events
+dotnet_naming_rule.events.style = pascal_case
+dotnet_naming_rule.events.symbols = event_symbols
+dotnet_naming_rule.events.severity = error
+dotnet_naming_symbols.event_symbols.applicable_kinds = event
+# Enums
+dotnet_naming_rule.enums.style = pascal_case
+dotnet_naming_rule.enums.symbols = enum_symbols
+dotnet_naming_rule.enums.severity = error
+dotnet_naming_symbols.enum_symbols.applicable_kinds = enum
+
+# C# Naming Style Definitions =================
+
+# Pascal Case
+dotnet_naming_style.pascal_case.required_prefix =
+dotnet_naming_style.pascal_case.required_suffix =
+dotnet_naming_style.pascal_case.capitalization = pascal_case
+# Camel Case
+dotnet_naming_style.camel_case.required_prefix =
+dotnet_naming_style.camel_case.required_suffix =
+dotnet_naming_style.camel_case.capitalization = camel_case
+# _ + Camel Case
+dotnet_naming_style.camel_case_with_underscore.required_prefix = _
+dotnet_naming_style.camel_case_with_underscore.required_suffix =
+dotnet_naming_style.camel_case_with_underscore.capitalization = camel_case
+# s_ + Camel Case
+dotnet_naming_style.camel_case_with_s.required_prefix = s_
+dotnet_naming_style.camel_case_with_s.required_suffix =
+dotnet_naming_style.camel_case_with_s.capitalization = camel_case
+# I + Pascal Case
+dotnet_naming_style.interface_pascal_case.required_prefix = I
+dotnet_naming_style.interface_pascal_case.required_suffix =
+dotnet_naming_style.interface_pascal_case.capitalization = pascal_case
+
+
+# Specific Rule Exclusion Section =================
+
+[Packages/SmartGitUPM/Editor/Package/SGUP*.cs]
+
+dotnet_naming_rule.internal_classes.style = pascal_case
+dotnet_naming_rule.internal_classes.symbols = internal_classes
+dotnet_naming_rule.internal_classes.severity = none
+dotnet_naming_symbols.internal_classes.applicable_kinds = class
+dotnet_naming_symbols.internal_classes.applicable_accessibilities = internal
+
+dotnet_naming_style.pascal_case.capitalization = pascal_case
+
+[Packages/SmartGitUPM/Editor/Package/Model/{PackageLocalInfo.cs,PackageRemoteInfo.cs}]
+
+dotnet_naming_rule.public_fields.style = camel_case
+dotnet_naming_rule.public_fields.symbols = public_fields
+dotnet_naming_symbols.public_fields.applicable_kinds = field
+dotnet_naming_symbols.public_fields.applicable_accessibilities = public
+dotnet_naming_symbols.public_fields.applicable_contained_types = PackageLocalInfo
+
+dotnet_naming_style.camel_case.capitalization = camel_case
+
+[Packages/SmartGitUPM/Editor/Utils/PackageVersionChecker.cs]
+
+dotnet_naming_rule.public_fields.style = camel_case
+dotnet_naming_rule.public_fields.symbols = public_fields
+dotnet_naming_rule.public_fields.severity = none
+dotnet_naming_symbols.public_fields.applicable_kinds = field
+dotnet_naming_symbols.public_fields.applicable_accessibilities = public
+
+dotnet_naming_style.camel_case.capitalization = camel_case

@@ -55,7 +55,7 @@ jobs:
       BOT_PRIVATE_KEY: ${{ secrets.BOT_PRIVATE_KEY }}
     with:
       ref: ${{ github.ref }}
-      file-path: ./Packages/SmartGitUPM/package.json
+      file-path: ./Packages/HistoryTracker/package.json
       tag: ${{ inputs.tag }}
       dry-run: ${{ inputs.dry-run }}
 

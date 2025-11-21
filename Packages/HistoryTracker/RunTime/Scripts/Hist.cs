@@ -12,14 +12,24 @@ namespace HistoryTracker
 
         public static void Configure(IHistSaveDataHandler handler)
         {
-            s_manager ??= Create(handler);
-#if !UNITY_EDITOR
-            if (HistSettings.HasSettings
-                && HistSettings.Current.IncludeRecordsInBuild)
-            {
-                StreamingAssetsRecordsInstaller.Install(s_manager);
-            }
+#if UNITY_EDITOR
+            var shouldCreate = true;
+#elif DEVELOPMENT_BUILD
+            var shouldCreate = HistSettings.Current.CurrentScope == HistSettings.ActivationScope.DevelopmentBuild;
+#else
+            var shouldCreate = HistSettings.Current.CurrentScope == HistSettings.ActivationScope.All;
 #endif
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+            if (shouldCreate)
+            {
+                s_manager ??= Create(handler);
+#if !UNITY_EDITOR
+                if (HistSettings.Current.IncludeRecordsInBuild)
+                {
+                    StreamingAssetsRecordsInstaller.Install(s_manager);
+                }
+#endif
+            }
         }
 
         static HistManager Create(IHistSaveDataHandler handler)

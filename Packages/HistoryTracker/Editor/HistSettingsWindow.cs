@@ -13,7 +13,7 @@ namespace HistoryTracker.Editor
         const string _gitBranchName = "main";
         const string _packageName = "com.ishix.history.tracker";
         const string _logoPath = PackagePath + "Editor/historyTrackerLogo.png";
-        
+
         [MenuItem("Window/HistoryTracker/open Settings", priority = 0)]
         static void ShowWindow()
         {
@@ -52,23 +52,22 @@ namespace HistoryTracker.Editor
             _versionChecker?.Dispose();
             _tokenSource?.SafeCancelAndDispose();
         }
- 
+
         void OnGUI()
         {
             {
-                var style = new GUIStyle(GUI.skin.label)
+                var style = new GUIStyle()
                 {
-                    padding = new RectOffset(10, 10, 10, 10),
-                    margin = new RectOffset(0, 0, 0, 10),
+                    padding = new RectOffset(5, 5, 5, 5),
                 };
                 GUILayout.BeginVertical(style);
             }
+
             EditorGUI.BeginDisabledGroup(_versionChecker.IsProcessing);
             {
                 var style = new GUIStyle()
                 {
                     padding = new RectOffset(5, 5, 5, 5),
-                    margin = new RectOffset(0, 0, 0, 5),
                 };
                 GUILayout.BeginHorizontal(style);
             }
@@ -87,6 +86,14 @@ namespace HistoryTracker.Editor
             {
                 RecordPopUpHistDialogButton.ShowDialog();
             }
+            {
+                var style = new GUIStyle(GUI.skin.label)
+                {
+                    alignment = TextAnchor.MiddleCenter,
+                    margin = new RectOffset(0, 0, 0, 5)
+                };
+                GUILayout.Label(_logo, style, GUILayout.MinWidth(400), GUILayout.Height(60.5f));
+            }
 
             if(_versionChecker.IsLoaded
                && !_versionChecker.IsProcessing
@@ -99,29 +106,26 @@ namespace HistoryTracker.Editor
                 var textStyle = new GUIStyle(GUI.skin.label)
                 {
                     richText = true,
+                    fontSize = 14,
+                    normal =
+                    {
+                        textColor = EditorGUIUtility.isProSkin ? Color.yellow : Color.blue
+                    }
                 };
+
                 GUILayout.BeginHorizontal(style);
                 GUILayout.Label(_updateIcon, GUILayout.Width(20), GUILayout.Height(20));
-                var version = "<b>Ver. " + _versionChecker.ServerInfo.version + "</b> is now available";
+                var version = "<b>" + _versionChecker.ServerInfo.VersionString + "</b> is now available";
                 GUILayout.Label(version, textStyle);
                 var clickedVersion = GUILayout.Button("Update", GUILayout.Width(80));
                 GUILayout.EndHorizontal();
-                
                 if(clickedVersion)
                 {
                     _versionChecker.Install(_tokenSource.Token);
                     _hasNewVersion = false;
                 }
             }
-            {
-                var style = new GUIStyle(GUI.skin.label)
-                {
-                    alignment = TextAnchor.MiddleCenter,
-                    margin = new RectOffset(0, 0, 0, 10)
-                };
-                GUILayout.Label(_logo, style, GUILayout.MinWidth(400), GUILayout.Height(60.5f));
-            }
-            
+
             _settingsObject.Update();
             var property = _settingsObject.GetIterator();
             property.NextVisible(true);
@@ -135,10 +139,10 @@ namespace HistoryTracker.Editor
                 var style = new GUIStyle(GUI.skin.label)
                 {
                     alignment = TextAnchor.MiddleRight,
-                    margin = new RectOffset(0, 0, 10, 0)
+                    margin = new RectOffset(0, 0, 5, 0)
                 };
                 var pluginVersion = _versionChecker.IsLoaded ? _versionChecker.LocalInfo.VersionString : "---";
-                GUILayout.Label("Ver. " + pluginVersion, style);
+                GUILayout.Label(pluginVersion, style);
             }
 
             GUILayout.EndVertical();

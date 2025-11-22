@@ -9,14 +9,14 @@ namespace Tests
     {
         [SerializeField] RunTimeTest _test;
         [SerializeField] RunTimeTestRecordLog _log;
-        
+
         public TestModelRepository Repository { get; private set; } = new ();
 
         void Awake()
         {
             var paths = new[]
             {
-                Path.Combine(Application.persistentDataPath, "TestDatas", "test1.bytes"),
+                Path.Combine(Application.persistentDataPath, "TestData", "test1.bytes"),
                 Path.Combine(Application.persistentDataPath, "test2.bytes"),
                 Path.Combine(Application.persistentDataPath, "test3.bytes")
             };

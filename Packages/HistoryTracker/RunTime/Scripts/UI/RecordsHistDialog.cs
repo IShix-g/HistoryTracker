@@ -15,13 +15,14 @@ namespace HistoryTracker
         [SerializeField] Text _pagerText;
         [SerializeField] RecordPopUpHistDialog _recordPopUp;
         [SerializeField] RecordsHistDialogContent[] _contents;
-        
+
         HistContentsPager _pager;
         bool _isFirstOpen = true;
+        int _prevRecordsLength;
         HistManager _manager;
         Action _closeAction;
 
-        public void Set(HistManager manager)
+        public void Initialize(HistManager manager)
         {
             if (!_isFirstOpen
                 && _manager != manager)
@@ -78,11 +79,13 @@ namespace HistoryTracker
                 _recordPopUp.Close();
             }
 
-            if (!_isFirstOpen)
+            if (!_isFirstOpen
+                && _manager.Records.Length == _prevRecordsLength)
             {
                 return;
             }
             _isFirstOpen = false;
+            _prevRecordsLength = _manager.Records.Length;
             SetUp();
             LoadContents();
         }

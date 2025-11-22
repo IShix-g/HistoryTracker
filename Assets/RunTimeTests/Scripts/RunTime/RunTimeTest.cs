@@ -34,7 +34,11 @@ namespace Tests
             });
         }
 
-        void OnSaveButtonClicked() => Hist.SaveHistory();
+        void OnSaveButtonClicked()
+        {
+            var info = new HistRecordInfo("[Scripts]","[Scripts]");
+            Hist.SaveHistory(info);
+        }
     }
 }
 #endif

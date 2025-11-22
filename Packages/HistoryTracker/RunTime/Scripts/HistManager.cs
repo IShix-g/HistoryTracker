@@ -10,10 +10,10 @@ namespace HistoryTracker
         public event Action<HistRecord> OnRemoveRecord = delegate {};
         public event Action OnStartApply = delegate {};
         public event Action OnEndApply = delegate {};
-        
+
         public HistRecords Records => _service.GetRecords();
         public bool IsStartApply { get; private set; }
-        
+
         readonly IHistSaveDataHandler _handler;
         readonly IHistDataService _service;
 
@@ -32,13 +32,18 @@ namespace HistoryTracker
 
         public void DeleteAll() => _service.DeleteAll();
 
-        public HistRecord SaveHistory()
+        public HistRecord SaveHistory(HistRecordInfo addInfo = null)
         {
             var paths = _handler.GetSaveFilePaths();
             var info = _handler.OnBeforeSave();
             var record = _service.Add(paths);
             record.Title = info.Title;
             record.Description = info.Description;
+            if (addInfo != null)
+            {
+                record.Title += " " + addInfo.Title;
+                record.Description += "\n" + addInfo.Description;
+            }
             record.Description += "\n" + GetPathList(record);
             OnAddRecord(record);
             return record;

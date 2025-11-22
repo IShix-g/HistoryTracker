@@ -74,7 +74,7 @@ namespace HistoryTracker.Editor
             var width = GUILayout.Width(33);
             var height = GUILayout.Height(EditorGUIUtility.singleLineHeight + 5);
             var clickedGitHub = GUILayout.Button(_helpHeader, width, height);
-            var clickedDialog = GUILayout.Button("open Records dialog (Play mode only)", height);
+            var clickedDialog = GUILayout.Button("open History dialog (Play mode only)", height);
             GUILayout.EndHorizontal();
             EditorGUI.EndDisabledGroup();
 
@@ -84,15 +84,7 @@ namespace HistoryTracker.Editor
             }
             else if (clickedDialog)
             {
-                RecordPopUpHistDialogButton.ShowDialog();
-            }
-            {
-                var style = new GUIStyle(GUI.skin.label)
-                {
-                    alignment = TextAnchor.MiddleCenter,
-                    margin = new RectOffset(0, 0, 0, 5)
-                };
-                GUILayout.Label(_logo, style, GUILayout.MinWidth(400), GUILayout.Height(60.5f));
+                HistoryPopUpHistDialogButton.ShowDialog();
             }
 
             if(_versionChecker.IsLoaded
@@ -102,6 +94,7 @@ namespace HistoryTracker.Editor
                 var style = new GUIStyle(GUI.skin.box)
                 {
                     padding = new RectOffset(10, 10, 10, 10),
+                    margin = new RectOffset(0, 0, 0, 5)
                 };
                 var textStyle = new GUIStyle(GUI.skin.label)
                 {
@@ -124,6 +117,15 @@ namespace HistoryTracker.Editor
                     _versionChecker.Install(_tokenSource.Token);
                     _hasNewVersion = false;
                 }
+            }
+
+            {
+                var style = new GUIStyle(GUI.skin.label)
+                {
+                    alignment = TextAnchor.MiddleCenter,
+                    margin = new RectOffset(0, 0, 0, 5)
+                };
+                GUILayout.Label(_logo, style, GUILayout.MinWidth(400), GUILayout.Height(60.5f));
             }
 
             _settingsObject.Update();

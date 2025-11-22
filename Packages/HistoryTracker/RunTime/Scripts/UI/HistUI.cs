@@ -22,7 +22,7 @@ namespace HistoryTracker
         {
             if (s_instance != null)
             {
-                s_instance._dialog.Set(manager);
+                s_instance._dialog.Initialize(manager);
                 return s_instance;
             }
 #if UNITY_EDITOR
@@ -32,7 +32,7 @@ namespace HistoryTracker
 #endif
             var go = Instantiate(prefab);
             s_instance = go;
-            s_instance._dialog.Set(manager);
+            s_instance._dialog.Initialize(manager);
             return go;
         }
 

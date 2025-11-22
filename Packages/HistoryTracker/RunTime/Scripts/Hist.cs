@@ -10,17 +10,24 @@ namespace HistoryTracker
 
         static HistManager s_manager;
 
+        /// <summary>
+        /// Configure HistoryTracker.
+        /// Please initialize as early as possible during game startup, such as in Awake.
+        /// </summary>
+        /// <param name="handler">Associates your save system with HistoryTracker via IHistSaveDataHandler.</param>
+        /// <example>
+        /// <code>
+        /// using HistoryTracker;
+        ///
+        /// void Awake()
+        /// {
+        ///     Hist.Configure(_repository);
+        /// }
+        /// </code>
+        /// </example>
         public static void Configure(IHistSaveDataHandler handler)
         {
-#if UNITY_EDITOR
-            var shouldCreate = true;
-#elif DEVELOPMENT_BUILD
-            var shouldCreate = HistSettings.Current.CurrentScope == HistSettings.ActivationScope.DevelopmentBuild;
-#else
-            var shouldCreate = HistSettings.Current.CurrentScope == HistSettings.ActivationScope.All;
-#endif
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            if (shouldCreate)
+            if (HistSettings.Current.IsScopeActive)
             {
                 s_manager ??= Create(handler);
 #if !UNITY_EDITOR
@@ -32,6 +39,19 @@ namespace HistoryTracker
             }
         }
 
+        /// <summary>
+        /// Save the history of saved games
+        /// Performs the same action as the dialog's Save button.
+        /// </summary>
+        public static void SaveHistory()
+        {
+            if (HistSettings.Current.IsScopeActive)
+            {
+                s_manager?.SaveHistory();
+                s_manager?.Save();
+            }
+        }
+
         static HistManager Create(IHistSaveDataHandler handler)
         {
 #if UNITY_EDITOR
@@ -39,11 +59,10 @@ namespace HistoryTracker
 #else
             var service = new PersistentHistDataService(DirectoryName);
 #endif
-            s_manager = new HistManager(handler, service);
-            return s_manager;
+            return s_manager = new HistManager(handler, service);
         }
 
-        public static HistUI CreateOrGet()
+        public static HistUI CreateOrGetUI()
         {
             if (s_manager == null)
             {

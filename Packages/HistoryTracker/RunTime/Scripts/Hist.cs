@@ -43,11 +43,12 @@ namespace HistoryTracker
         /// Save the history of saved games
         /// Performs the same action as the dialog's Save button.
         /// </summary>
-        public static void SaveHistory()
+        /// <param name="addInfo"></param>
+        public static void SaveHistory(HistRecordInfo addInfo = null)
         {
             if (HistSettings.Current.IsScopeActive)
             {
-                s_manager?.SaveHistory();
+                s_manager?.SaveHistory(addInfo);
                 s_manager?.Save();
             }
         }

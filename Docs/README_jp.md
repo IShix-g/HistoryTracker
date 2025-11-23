@@ -8,7 +8,7 @@
 # HistoryTracker
 ゲームデータ(永続保存データ)を保存/復元するUnity向けプラグイン
 
-![HistoryTracker](header.png)
+![HistoryTracker](Docs/header.png)
 
 ## Features
 - ゲームデータ(永続保存データ)の保存
@@ -40,7 +40,7 @@ RPGやアドベンチャーゲームで、「選択肢Aを選んだ場合」と�
 "Unity Editor : Window > Package Manager > Add package from git URL...".
 
 ```
-https://github.com/IShix-g/HistoryTracker.git?path=Packages/HistoryTracker#1.0
+https://github.com/IShix-g/HistoryTracker.git?path=Packages/HistoryTracker
 ```
 
 <img src="Docs/add_package.png" width="850"/>

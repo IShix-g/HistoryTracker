@@ -8,7 +8,7 @@
 # HistoryTracker
 ゲームデータ(永続保存データ)を保存/復元するUnity向けプラグイン
 
-![HistoryTracker](Docs/header.png)
+![HistoryTracker](header.png)
 
 ## Features
 - ゲームデータ(永続保存データ)の保存
@@ -43,7 +43,7 @@ RPGやアドベンチャーゲームで、「選択肢Aを選んだ場合」と�
 https://github.com/IShix-g/HistoryTracker.git?path=Packages/HistoryTracker
 ```
 
-<img src="Docs/add_package.png" width="850"/>
+<img src="add_package.png" width="850"/>
 
 ## Scripts
 
@@ -95,7 +95,7 @@ var description = "[Test]";
 return new HistRecordInfo(title, description);
 ```
 
-<img src="Docs/hist_record_info.png" width="830"/>
+<img src="hist_record_info.png" width="830"/>
 
 ### 依存の設定
 
@@ -134,7 +134,7 @@ void OnDialogButtonClicked()
 
 保存された履歴が一覧で表示されます。
 
-<img src="Docs/dialog1.jpg" width="400"/>
+<img src="dialog1.jpg" width="400"/>
 
 | No | 説明           |
 |----|--------------|
@@ -150,7 +150,7 @@ void OnDialogButtonClicked()
 
 保存されたゲームデータの詳細と操作。
 
-<img src="Docs/dialog2.jpg" width="400"/>
+<img src="dialog2.jpg" width="400"/>
 
 | No | 説明                      |
 |----|-------------------------|
@@ -170,11 +170,11 @@ void OnDialogButtonClicked()
 このプラグインは、デフォルトでデバック環境でのみ動作します。それを設定で調整できます。
 
 ### `Window > HistoryTracker > open Settings`で開く
-<img src="Docs/menu.jpg" width="700"/>
+<img src="menu.jpg" width="700"/>
 
 ### 設定
 
-<img src="Docs/settings.jpg" width="400"/>
+<img src="settings.jpg" width="400"/>
 
 | No | 説明                                                  |
 |----|-----------------------------------------------------|

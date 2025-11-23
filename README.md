@@ -1,37 +1,38 @@
 
 ![Unity](https://img.shields.io/badge/Unity-2022.3%2B-black)
 
+[README - 日本語版](Docs/README_jp.md)
 
 > [!IMPORTANT]
-> このプラグインは保存されたゲームデータを保存/復元するプラグインです。データのシリアライズ/デシリアライズなどのセーブシステムに該当する機能は含まれておりません。
+> This plugin is designed to save/restore existing game data files. It does not include save system functionalities such as data serialization or deserialization.
 
 # HistoryTracker
-ゲームデータ(永続保存データ)を保存/復元するUnity向けプラグイン
+A Unity plugin for saving and restoring game data (persistent data).
 
 ![HistoryTracker](Docs/header.png)
 
 ## Features
-- ゲームデータ(永続保存データ)の保存
-- 保存したゲームデータの復元
-- 見やすいUIで管理
-- Editorで保存したデータを実機で使用
+- Save game data (persistent data).
+- Restore saved game data.
+- Manage data via a clean, easy-to-read UI.
+- Use data saved in the Editor on actual devices.
 
 ## Why HistoryTracker?
 
-### 1. 確率要素の集中デバッグ
-「1%の確率でドロップするアイテム」や「ある条件で発生するイベント」を確認したい場合、ゲームをやり直すのは時間の無駄です。 判定が行われる直前の状態で保存し、判定後にロードして何度も試行することで、低確率イベントの挙動確認を短時間で何十回も行えます。
+### 1. Focused Debugging of RNG Elements
+When verifying "items with a 1% drop rate" or "events triggered under specific conditions," restarting the game from the beginning is a waste of time. By saving the state immediately before the check and loading it after the check to retry repeatedly, you can verify the behavior of low-probability events dozens of times in a short period.
 
-### 2. クエスト分岐・マルチエンディングの網羅テスト
-RPGやアドベンチャーゲームで、「選択肢Aを選んだ場合」と「選択肢Bを選んだ場合」の両方をテストしたい時に役立ちます。 分岐ポイントの直前で状態を保存しておけば、一方のルートを確認した後、即座に分岐前に戻ってもう一方のルートを確認でき、デバッグの手戻りを最小限に抑えられます。
+### 2. Comprehensive Testing of Quest Branches & Multi-Endings
+This is useful in RPGs or adventure games when you want to test both "Option A" and "Option B." By saving the state just before a branching point, you can check one route and then immediately return to check the other, minimizing backtracking during debugging.
 
-### 3. QA（品質保証）時の「バグ再現」ツールとして
-テスターがバグを発見した際、「どうやってその状態になったか」を再現するのは困難です。このプラグインは実機でも使える為、**定期的に保存**しておく事で、バグが発生した瞬間に巻き戻して、開発者に正確な発生状況を共有したり、再現手順を特定したりすることが容易になります。
+### 3. As a "Bug Reproduction" Tool for QA
+When testers find a bug, reproducing "how that state was reached" is often difficult. Since this plugin works on actual devices, by saving periodically, you can rewind to the moment a bug occurred. This makes it easy to share the exact occurrence context with developers or identify reproduction steps.
 
-### 4. ゲームバランス調整（パラメータ調整）の高速化
-ボス戦の難易度調整などで、「攻撃力を少し上げてリトライしたい」という場面です。 戦闘開始前の状態を保持しておき、インスペクターで敵のパラメータを調整しては「復元して再戦」を繰り返すことで、理想のゲームバランスを探ることができます。
+### 4. Accelerating Game Balance Adjustments
+Useful for situations like adjusting boss difficulty, where you want to "slightly increase attack power and retry." By preserving the state before the battle starts, adjusting enemy parameters in the Inspector, and repeating the "Restore & Retry" process, you can efficiently find the ideal game balance.
 
-### 5. テストの初期化処理
-統合テストを行う際、テストごとに「所持金1000G、レベル10の状態」を作る必要があります。 毎回新規データからセットアップするのではなく、あらかじめ作っておいた「理想の状態」をこのプラグインで復元してテストを開始すれば、テストの実行時間を大幅に短縮し、クリーンな環境でテストを行えます。
+### 5. Test Initialization
+When performing integration tests, you often need specific states like "1000G, Level 10." Instead of setting up from new data every time, restoring an "ideal state" created in advance with this plugin allows you to start testing immediately, significantly reducing execution time and ensuring a clean testing environment.
 
 ## Getting Started
 
@@ -47,15 +48,16 @@ https://github.com/IShix-g/HistoryTracker.git?path=Packages/HistoryTracker
 
 ## Scripts
 
-### 実装
+### Implementation
 
-セーブシステムとHistoryTrackerを関連付ける`IHistSaveDataHandler`を実装します。
+Implement `IHistSaveDataHandler` to link your save system with HistoryTracker.
 
-| メソッド               | 説明                                                                           |
+| Method               | Description                                                                           |
 |--------------------|------------------------------------------------------------------------------|
-| OnBeforeSave()     | セーブする直前に呼ばれます。返り値でタイトルと説明を返します。この内容はUIに表示されます              |
-| GetSaveFilePaths() | セーブデータのフルパスを配列で返します。例) `Application.persistentDataPath` + "/data.bytes"        
-| ApplyData()        | セーブデータが復元された後に呼ばれます。`Application.Quit()`を呼んで一度アプリを閉じるなどの処理を追加してセーブデータを反映させます。 |
+| OnBeforeSave()     | Called immediately before saving. Returns a title and description. This content is displayed in the UI. |
+| GetSaveFilePaths() | Returns an array of full paths to the save data.
+e.g., `Application.persistentDataPath` + "/data.bytes"        
+| ApplyData()        | Called after save data is restored. Add processing here to apply the save data, such as calling `Application.Quit()` to close the app and reload the state. |
 
 ```csharp
 using HistoryTracker;
@@ -87,7 +89,7 @@ public sealed class TestModelRepository : ModelRepository, IHistSaveDataHandler
 
 ### HistRecordInfo
 
-上記の`OnBeforeSave()`で設定したタイトルと説明は、UIで下記のように表示されます。
+The title and description set in `OnBeforeSave()` above will be displayed in the UI as follows:
 
 ```csharp
 var title = "Saved Count: " + Models[0].SaveCount;
@@ -97,9 +99,9 @@ return new HistRecordInfo(title, description);
 
 <img src="Docs/hist_record_info.png" width="830"/>
 
-### 依存の設定
+### Setting Dependencies
 
-上記で実装した`IHistSaveDataHandler`をHistoryTrackerに設定します。Awakeなどゲーム起動後できる限り早いタイミングで設定してください。
+Set the `IHistSaveDataHandler` implemented above to HistoryTracker. Please set this as early as possible after the game starts, such as in `Awake`.
 
 ```csharp
 void Awake()
@@ -109,9 +111,9 @@ void Awake()
 }
 ```
 
-### ヒストリーダイアログを開く
+### Opening the History Dialog
 
-ダイアログはコードで開きます。必要無くなったタイミングで`Hist.Release()`で解放する事も可能ですが、軽いので問題になる可能性は低いと思います。
+Open the dialog via code. Although it is possible to release it with `Hist.Release()` when it is no longer needed, it is lightweight so this is unlikely to be an issue.
 
 ```csharp
 using HistoryTracker;
@@ -128,64 +130,64 @@ void OnDialogButtonClicked()
 }
 ```
 
-## ヒストリーダイアログの説明
+## History Dialog Explanation
 
-### ヒストリー 一覧
+### History List
 
-保存された履歴が一覧で表示されます。
+Displays a list of saved history.
 
 <img src="Docs/dialog1.jpg" width="400"/>
 
-| No | 説明           |
-|----|--------------|
-| ①  | ゲームデータを保存 |
-| ②  | 件数の表示        |
-| ③  | 保存したゲームデータ   |
-| ④  | 詳細を開く     |
-| ⑤  | 次のページへ       |
-| ⑥  | 前のページへ       |
-| ⑦  | 閉じる          |
+| No | Description          |
+|----|----------------------|
+| ①  | Save Game Data       |
+| ②  | Record Count         |
+| ③  | Saved Game Data Item |
+| ④  | Open Details         |
+| ⑤  | Next Page               |
+| ⑥  | Previous Page               |
+| ⑦  | Close                  |
 
 ### 詳細
 
-保存されたゲームデータの詳細と操作。
+Details and operations for saved game data.
 
 <img src="Docs/dialog2.jpg" width="400"/>
 
-| No | 説明                      |
-|----|-------------------------|
-| ①  | ゲームデータの復元               |
-| ②  | ゲームデータの削除               |
-| ③  | タイトル (長押しで編集可) *        |
-| ④  | 説明 (長押しで編集可) *          |
-| ⑤  | 保存したデータのパス一覧            |
-| ⑥  | Editorで保存された場合、表示されるバッチ |
-| ⑦  | 閉じる                     |
-| ⑧  | 保存日                     |
+| No | Description                        |
+|----|------------------------------------|
+| ①  | Restore Game Data                  |
+| ②  | Delete Game Data                   |
+| ③  | Title (Long press to edit) *       |
+| ④  | Description (Long press to edit) * |
+| ⑤  | List of saved file paths           |
+| ⑥  | Badge displayed if saved in Editor |
+| ⑦  | Close                              |
+| ⑧  | Date Saved                                |
 
-* 実機の場合、Editorで生成されたデータを編集できません。
+* Note: On actual devices, you cannot edit data generated in the Editor.
 
-## プラグインの設定
+## Plugin Settings
 
-このプラグインは、デフォルトでデバック環境でのみ動作します。それを設定で調整できます。
+By default, this plugin operates only in the debug environment. You can adjust this in the settings.
 
-### `Window > HistoryTracker > open Settings`で開く
+### Open via `Window > HistoryTracker > open Settings`
 <img src="Docs/menu.jpg" width="700"/>
 
-### 設定
+### Settings
 
 <img src="Docs/settings.jpg" width="400"/>
 
-| No | 説明                                                  |
-|----|-----------------------------------------------------|
-| ①  | GitHubページの表示  (外部リンク)                               |
-| ②  | ヒストリーダイアログを開く (ランタイムのみ)                             |
-| ③  | プラグインの有効範囲 (EditorOnly / DevelopmentBuild / Allから選択) |
-| ④  | Editorで保存したゲームデータを実機で使用するか？                 |
+| No | Description                                          |
+|----|------------------------------------------------------|
+| ①  | Show GitHub Page (External Link)                     |
+| ②  | Open History Dialog (Runtime only)                   |
+| ③  | Plugin Scope (EditorOnly / DevelopmentBuild / Allから選択) |
+| ④  | Use game data saved in Editor on actual device?         |
 
-## スクリプトからゲームデータを保存する
+## Saving Game Data via Script
 
-ヒストリーダイアログのSaveボタンでゲームデータを保存できますが、下記コードからでも保存できます。
+While you can save game data using the Save button in the History Dialog, you can also save via code using the snippet below:
 
 ```csharp
 Hist.SaveHistory();

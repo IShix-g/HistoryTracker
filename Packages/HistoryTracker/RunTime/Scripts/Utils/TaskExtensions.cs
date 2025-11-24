@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace HistoryTracker
 {
-    public static class TaskExtensions
+    internal static class TaskExtensions
     {
         public static TaskAwaiter<UnityWebRequest> GetAwaiter(this UnityWebRequestAsyncOperation asyncOp)
         {
@@ -30,7 +30,7 @@ namespace HistoryTracker
             };
             return source.Task.GetAwaiter();
         }
-        
+
         public static void ContinueOnMainThread<T>(
             this Task<T> @this,
             Action<Task<T>> onSuccess,

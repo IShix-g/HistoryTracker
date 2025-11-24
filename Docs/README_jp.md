@@ -51,11 +51,11 @@ https://github.com/IShix-g/HistoryTracker.git?path=Packages/HistoryTracker
 
 セーブシステムとHistoryTrackerを関連付ける`IHistSaveDataHandler`を実装します。
 
-| メソッド               | 説明                                                                           |
-|--------------------|------------------------------------------------------------------------------|
-| OnBeforeSave()     | セーブする直前に呼ばれます。返り値でタイトルと説明を返します。この内容はUIに表示されます              |
-| GetSaveFilePaths() | セーブデータのフルパスを配列で返します。例) `Application.persistentDataPath` + "/data.bytes"        
-| ApplyData()        | セーブデータが復元された後に呼ばれます。`Application.Quit()`を呼んで一度アプリを閉じるなどの処理を追加してセーブデータを反映させます。 |
+| メソッド               | 説明                                                                      |
+|--------------------|-------------------------------------------------------------------------|
+| OnBeforeSave()     | セーブする直前に呼ばれます。保存が必要なゲームデータを保存し、タイトルと説明を返します。この内容はUIに表示されます              |
+| GetSaveFilePaths() | セーブデータのフルパスを配列で返します。例) `Application.persistentDataPath` + "/data.bytes" 
+| ApplyData()        | セーブデータが復元された後に呼ばれます。ゲームデータをロードし直す、または、`Application.Quit()`を呼んで一度アプリを閉じるなどの処理を追加してセーブデータを反映させます。          |
 
 ```csharp
 using HistoryTracker;

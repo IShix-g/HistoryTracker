@@ -9,6 +9,7 @@ namespace Tests
     {
         [SerializeField] Button _dialogButton;
         [SerializeField] Button _saveButton;
+        [SerializeField] Button _errorButton;
 
         TestModelRepository _repository;
 
@@ -19,19 +20,28 @@ namespace Tests
 
         void Start()
         {
+            HistErrorSaver.Create();
             _dialogButton.onClick.AddListener(OnDialogButtonClicked);
             _saveButton.onClick.AddListener(OnSaveButtonClicked);
+            _errorButton.onClick.AddListener(OnErrorButtonClicked);
         }
 
-        void OnDialogButtonClicked()
-        {
-            Hist.OpenDialog();
-        }
+        void OnDialogButtonClicked() => Hist.OpenDialog();
 
         void OnSaveButtonClicked()
         {
             var info = new HistRecordInfo("[Scripts]","[Scripts]");
             Hist.SaveHistory(info);
+        }
+
+        void OnErrorButtonClicked() => throw new System.Exception("Test Exception");
+
+        public sealed class User
+        {
+            public int Level { get; set; }
+            public int Hp { get; set; }
+            public int Mp { get; set; }
+            public int Gold { get; set; }
         }
     }
 }

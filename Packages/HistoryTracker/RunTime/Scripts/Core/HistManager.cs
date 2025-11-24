@@ -38,7 +38,7 @@ namespace HistoryTracker
             var info = _handler.OnBeforeSave();
             var record = _service.Add(paths);
             record.Title = MergeRecordText(placement, info.Title, addInfo?.Title);
-            record.Description = MergeRecordText(placement, info.Description, addInfo?.Description) + "\n\n" + ToNormalizedPathString(record);
+            record.Description = MergeRecordText(placement, info.Description, addInfo?.Description) + "\nPaths:\n" + ToNormalizedPathString(record);
             OnAddRecord(record);
             return record;
         }

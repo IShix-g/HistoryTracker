@@ -76,7 +76,10 @@ namespace HistoryTracker
         {
             if (s_manager == null)
             {
-                throw new InvalidOperationException("[HistoryTracker] `Hist.Configure()` must be called before using HistoryTracker");
+                var errorMsg = HistSettings.Current.IsScopeActive ?
+                    "[HistoryTracker] `Hist.Configure()` must be called before using HistoryTracker"
+                    : "[HistoryTracker] Cannot display dialog because it is outside the ActivationScope range. ActivationScope can be changed in settings: Window > HistoryTracker > open Settings";
+                throw new InvalidOperationException(errorMsg);
             }
             return HistUI.CreateOrGet(s_manager);
         }

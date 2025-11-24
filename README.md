@@ -119,13 +119,7 @@ using HistoryTracker;
 
 void OnDialogButtonClicked()
 {
-    // Display a dialog by creating an object and calling OpenDialog.
-    var ui = Hist.CreateOrGetUI();
-    ui.OpenDialog(() =>
-    {
-        // You can also release it when the dialog closes.
-        // Hist.Release();
-    });
+    Hist.OpenDialog();
 }
 ```
 

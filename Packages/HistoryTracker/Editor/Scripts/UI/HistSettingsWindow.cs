@@ -12,7 +12,7 @@ namespace HistoryTracker.Editor
         const string _gitInstallUrl = _gitURL + ".git?path=Packages/HistoryTracker";
         const string _gitBranchName = "main";
         const string _packageName = "com.ishix.history.tracker";
-        const string _logoPath = PackagePath + "Editor/historyTrackerLogo.png";
+        const string _logoPath = PackagePath + "Editor/Textures/historyTrackerLogo.png";
 
         [MenuItem("Window/HistoryTracker/open Settings", priority = 0)]
         static void ShowWindow()
@@ -84,7 +84,7 @@ namespace HistoryTracker.Editor
             }
             else if (clickedDialog)
             {
-                HistoryPopUpHistDialogButton.ShowDialog();
+                HistoryPopUpHistDialogMenu.ShowDialog();
             }
 
             if(_versionChecker.IsLoaded

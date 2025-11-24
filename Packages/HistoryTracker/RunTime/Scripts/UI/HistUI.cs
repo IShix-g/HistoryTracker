@@ -45,6 +45,7 @@ namespace HistoryTracker
         }
 
         public void OpenDialog(Action closeAction = null) => _dialog.Open(closeAction);
+        
         public void CloseDialog() => _dialog.Close();
     }
 }

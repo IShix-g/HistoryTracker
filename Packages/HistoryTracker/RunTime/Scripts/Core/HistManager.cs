@@ -32,19 +32,13 @@ namespace HistoryTracker
 
         public void DeleteAll() => _service.DeleteAll();
 
-        public HistRecord SaveHistory(HistRecordInfo addInfo = null)
+        public HistRecord SaveHistory(HistRecordInfo addInfo = null, HistRecordInfoPlacement placement = HistRecordInfoPlacement.Prepend)
         {
             var paths = _handler.GetSaveFilePaths();
             var info = _handler.OnBeforeSave();
             var record = _service.Add(paths);
-            record.Title = info.Title;
-            record.Description = info.Description;
-            if (addInfo != null)
-            {
-                record.Title += " " + addInfo.Title;
-                record.Description += "\n" + addInfo.Description;
-            }
-            record.Description += "\n" + GetPathList(record);
+            record.Title = MergeRecordText(placement, info.Title, addInfo?.Title);
+            record.Description = MergeRecordText(placement, info.Description, addInfo?.Description) + "\nPaths:\n" + ToNormalizedPathString(record);
             OnAddRecord(record);
             return record;
         }
@@ -76,7 +70,22 @@ namespace HistoryTracker
             });
         }
 
-        string GetPathList(HistRecord record)
+        string MergeRecordText(HistRecordInfoPlacement placement, string baseText, string addText)
+        {
+            if (string.IsNullOrEmpty(addText))
+            {
+                return baseText;
+            }
+            if (string.IsNullOrEmpty(baseText))
+            {
+                return addText;
+            }
+            return placement == HistRecordInfoPlacement.Prepend
+                ? $"{addText}\n{baseText}"
+                : $"{baseText}\n{addText}";
+        }
+
+        string ToNormalizedPathString(HistRecord record)
         {
             var stg = string.Empty;
             foreach (var path in record.Paths)

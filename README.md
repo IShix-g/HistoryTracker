@@ -137,9 +137,9 @@ Displays a list of saved history.
 | ②  | Record Count         |
 | ③  | Saved Game Data Item |
 | ④  | Open Details         |
-| ⑤  | Next Page               |
-| ⑥  | Previous Page               |
-| ⑦  | Close                  |
+| ⑤  | Previous Page        |
+| ⑥  | Next Page            |
+| ⑦  | Close                |
 
 ### 詳細
 
@@ -156,7 +156,7 @@ Details and operations for saved game data.
 | ⑤  | List of saved file paths           |
 | ⑥  | Badge displayed if saved in Editor |
 | ⑦  | Close                              |
-| ⑧  | Date Saved                                |
+| ⑧  | Date Saved                         |
 
 * Note: On actual devices, you cannot edit data generated in the Editor.
 
@@ -171,12 +171,12 @@ By default, this plugin operates only in the debug environment. You can adjust t
 
 <img src="Docs/settings.jpg" width="400"/>
 
-| No | Description                                          |
-|----|------------------------------------------------------|
-| ①  | Show GitHub Page (External Link)                     |
-| ②  | Open History Dialog (Runtime only)                   |
-| ③  | Plugin Scope (EditorOnly / DevelopmentBuild / Allから選択) |
-| ④  | Use game data saved in Editor on actual device?         |
+| No | Description                                         |
+|----|-----------------------------------------------------|
+| ①  | Show GitHub Page (External Link)                    |
+| ②  | Open History Dialog (Runtime only)                  |
+| ③  | Plugin Scope (EditorOnly / DevelopmentBuild / All) |
+| ④  | Use game data saved in Editor on actual device?        |
 
 ## Saving Game Data via Script
 

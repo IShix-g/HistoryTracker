@@ -43,13 +43,15 @@ namespace HistoryTracker
         /// Save the history of saved games
         /// Performs the same action as the dialog's Save button.
         /// </summary>
-        /// <param name="addInfo"></param>
-        public static void SaveHistory(HistRecordInfo addInfo = null)
+        /// <param name="addInfo">Additional record information to save, such as a title or description.</param>
+        /// <param name="placement">Specifies the position at which to insert the history record.</param>
+        public static void SaveHistory(HistRecordInfo addInfo = null,
+            HistRecordInfoPlacement placement = HistRecordInfoPlacement.Prepend)
         {
             if (HistSettings.Current.IsScopeActive
                 && s_manager != null)
             {
-                s_manager.SaveHistory(addInfo);
+                s_manager.SaveHistory(addInfo, placement);
                 s_manager.Save();
             }
         }
@@ -64,6 +66,12 @@ namespace HistoryTracker
             return s_manager = new HistManager(handler, service);
         }
 
+        /// <summary>
+        /// Creates or retrieves the singleton instance of the HistoryTracker UI.
+        /// This method initializes and returns the UI associated with the provided HistManager.
+        /// Requires <c>Hist.Configure()</c> to be called prior to its usage.
+        /// </summary>
+        /// <returns>The active instance of the HistoryTracker UI.</returns>
         public static HistUI CreateOrGetUI()
         {
             if (s_manager == null)
@@ -74,5 +82,17 @@ namespace HistoryTracker
         }
 
         public static void Release() => HistUI.Release();
+
+        /// <summary>
+        /// Opens the History dialog.
+        /// </summary>
+        /// <param name="autoRelease">Whether to release resources when the dialog closes.</param>
+        /// <returns>The active instance of the HistoryTracker UI.</returns>
+        public static HistUI OpenDialog(bool autoRelease = false)
+        {
+            var ui = CreateOrGetUI();
+            ui.OpenDialog(autoRelease ? Release : null);
+            return ui;
+        }
     }
 }

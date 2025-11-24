@@ -46,10 +46,11 @@ namespace HistoryTracker
         /// <param name="addInfo"></param>
         public static void SaveHistory(HistRecordInfo addInfo = null)
         {
-            if (HistSettings.Current.IsScopeActive)
+            if (HistSettings.Current.IsScopeActive
+                && s_manager != null)
             {
-                s_manager?.SaveHistory(addInfo);
-                s_manager?.Save();
+                s_manager.SaveHistory(addInfo);
+                s_manager.Save();
             }
         }
 

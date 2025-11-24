@@ -52,11 +52,11 @@ https://github.com/IShix-g/HistoryTracker.git?path=Packages/HistoryTracker
 
 Implement `IHistSaveDataHandler` to link your save system with HistoryTracker.
 
-| Method             | Description                                                                                                                                                         |
-|--------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| OnBeforeSave()     | Called immediately before saving. Save the necessary game data and return a title and description. This content will be displayed in the UI                         |
-| GetSaveFilePaths() | Returns an array of full paths to the save data. e.g., `Application.persistentDataPath` + "/data.bytes"                                                             |
-| ApplyData()        | Called after the saved data is restored. Add processing such as reloading game data or calling `Application.Quit()` to close the app once and apply the saved data. |
+| Method             | Description                                                                                                                                |
+|--------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| OnBeforeSave()     | Called immediately before saving. Save necessary game data and return the title and description. This content will be displayed in the UI. |
+| GetSaveFilePaths() | Returns an array of full paths to game data files. e.g., `Application.persistentDataPath` + "/data.bytes"                                  
+| ApplyData()        | Called after game data has been restored. Reflect the game data by reloading it or by calling `Application.Quit()` to close the app once.  |
 
 ```csharp
 using HistoryTracker;

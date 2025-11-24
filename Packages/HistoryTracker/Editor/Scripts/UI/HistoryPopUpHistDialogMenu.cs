@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HistoryTracker.Editor
 {
-    internal sealed class HistoryPopUpHistDialogButton
+    internal sealed class HistoryPopUpHistDialogMenu
     {
         [MenuItem("Window/HistoryTracker/open History dialog (Play mode only)")]
         public static void ShowDialog()

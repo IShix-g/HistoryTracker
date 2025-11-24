@@ -185,3 +185,37 @@ While you can save game data using the Save button in the History Dialog, you ca
 ```csharp
 Hist.SaveHistory();
 ```
+
+## Use Cases
+
+### Save Game Data on Level Up
+
+If your save system has level-up events, saving game data each time you level up makes it easier to revert if issues
+occur.
+
+<b>Code Example:</b>
+
+```csharp
+void OnLevelUp(int level)
+{
+    // You can add a title and description.
+    var title = $"Level Up {level}";
+    var description = JsonUtility.ToJson(_user, true);
+    var info = new HistRecordInfo(title, description);
+    Hist.SaveHistory(info);
+}
+```
+
+### Save Game Data When Errors Occur
+
+To use the pre-prepared code, execute the following. This is a singleton component that monitors for errors and calls
+`Hist.SaveHistory()`.
+
+<b>Code Example:</b>
+
+```csharp
+void Start()
+{
+    HistErrorSaver.Create();
+}
+```

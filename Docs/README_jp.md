@@ -184,3 +184,33 @@ void OnDialogButtonClicked()
 ```csharp
 Hist.SaveHistory();
 ```
+
+## Use Cases
+
+### レベルアップ時にゲームデータを保存する
+
+セーブシステムにレベルアップイベントがあれば、レベルアップ毎に保存する事で問題が発生した場合に巻き戻ししやすくなります。
+
+<b>コード例:</b>
+```csharp
+void OnLevelUp(int level)
+{
+    // タイトルと説明を追加できます。
+    var title = $"Level Up {level}";
+    var description = JsonUtility.ToJson(_user, true);
+    var info = new HistRecordInfo(title, description);
+    Hist.SaveHistory(info);
+}
+```
+
+### エラーが発生した時にゲームデータを保存する
+
+予め準備したコードを使う場合は、下記を実行してください。エラーの発生を監視して、`Hist.SaveHistory()`を呼ぶシングルトンのコンポーネントです。
+
+<b>コード例:</b>
+```csharp
+void Start()
+{
+    HistErrorSaver.Create();
+}
+```

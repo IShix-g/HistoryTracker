@@ -28,7 +28,7 @@ namespace HistoryTracker.Editor
         GUIContent _updateIcon;
         GUIContent _helpHeader;
         bool _hasNewVersion;
-        CancellationTokenSource _tokenSource;
+        CancellationTokenSource _tokenSource = new ();
 
         void OnEnable()
         {

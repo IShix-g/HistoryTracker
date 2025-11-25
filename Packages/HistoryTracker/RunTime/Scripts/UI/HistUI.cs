@@ -35,8 +35,8 @@ namespace HistoryTracker
 #endif
             var go = Instantiate(prefab);
             s_instance = go;
-            s_instance._dialog.Initialize(manager);
             s_instance.Initialize();
+            s_instance._dialog.Initialize(manager);
             return go;
         }
 

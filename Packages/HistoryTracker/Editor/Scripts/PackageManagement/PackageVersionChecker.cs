@@ -183,6 +183,12 @@ namespace HistoryTracker.Editor
             return string.Empty;
         }
 
+        public void Install(CancellationToken token = default)
+        {
+            _tokenSource = CancellationTokenSource.CreateLinkedTokenSource(token);
+            _packageInstaller.Install(new []{ GitInstallUrl }, _tokenSource.Token).Handled();
+        }
+
         public void Dispose()
         {
             if (_isDisposed)

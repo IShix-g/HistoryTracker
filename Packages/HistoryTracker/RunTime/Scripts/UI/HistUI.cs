@@ -1,6 +1,7 @@
 
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -18,6 +19,8 @@ namespace HistoryTracker
 
         static HistUI s_instance;
 
+        GameObject _eventSystem;
+
         internal static HistUI CreateOrGet(HistManager manager)
         {
             if (s_instance != null)
@@ -33,11 +36,32 @@ namespace HistoryTracker
             var go = Instantiate(prefab);
             s_instance = go;
             s_instance._dialog.Initialize(manager);
+            s_instance.Initialize();
             return go;
+        }
+
+        void Initialize()
+        {
+            if (EventSystem.current != null)
+            {
+                return;
+            }
+
+            _eventSystem = new GameObject("EventSystem");
+            _eventSystem.AddComponent<EventSystem>();
+#if ENABLE_INPUT_SYSTEM
+            _eventSystem.AddComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
+#else
+            _eventSystem.AddComponent<StandaloneInputModule>();
+#endif
         }
 
         internal static void Release()
         {
+            if (s_instance._eventSystem != null)
+            {
+                Destroy(s_instance._eventSystem);
+            }
             if (s_instance != null)
             {
                 Destroy(s_instance.gameObject);
@@ -45,7 +69,7 @@ namespace HistoryTracker
         }
 
         public void OpenDialog(Action closeAction = null) => _dialog.Open(closeAction);
-        
+
         public void CloseDialog() => _dialog.Close();
     }
 }

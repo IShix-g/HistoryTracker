@@ -219,3 +219,6 @@ void Start()
     HistErrorSaver.Create();
 }
 ```
+
+## API Used for Asset Loading
+`Resources.Load` - Used for loading UI assets at runtime on actual devices (e.g., mobile phones). Assets loaded via this API are only included in the final game build if the associated plugin is enabled. If the plugin is disabled, the assets are omitted (stripped) and will not be packaged with the application.

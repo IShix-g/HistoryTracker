@@ -41,7 +41,7 @@ When performing integration tests, you often need specific states like "1000G, L
 "Unity Editor : Window > Package Manager > Add package from git URL...".
 
 ```
-https://github.com/IShix-g/HistoryTracker.git?path=Packages/HistoryTracker
+https://github.com/IShix-g/HistoryTracker.git?path=Packages/HistoryTracker#v1
 ```
 
 <img src="Docs/add_package.png" width="850"/>

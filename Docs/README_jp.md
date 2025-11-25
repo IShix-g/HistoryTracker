@@ -40,7 +40,7 @@ RPGやアドベンチャーゲームで、「選択肢Aを選んだ場合」と�
 "Unity Editor : Window > Package Manager > Add package from git URL...".
 
 ```
-https://github.com/IShix-g/HistoryTracker.git?path=Packages/HistoryTracker
+https://github.com/IShix-g/HistoryTracker.git?path=Packages/HistoryTracker#v1
 ```
 
 <img src="add_package.png" width="850"/>

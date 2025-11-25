@@ -3,6 +3,10 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem.UI;
+#endif
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -50,7 +54,7 @@ namespace HistoryTracker
             _eventSystem = new GameObject("EventSystem");
             _eventSystem.AddComponent<EventSystem>();
 #if ENABLE_INPUT_SYSTEM
-            _eventSystem.AddComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
+            _eventSystem.AddComponent<InputSystemUIInputModule>();
 #else
             _eventSystem.AddComponent<StandaloneInputModule>();
 #endif

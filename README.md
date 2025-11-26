@@ -100,7 +100,8 @@ return new HistRecordInfo(title, description);
 
 ### Setting Dependencies
 
-Set the `IHistSaveDataHandler` implemented above to HistoryTracker. Please set this as early as possible after the game starts, such as in `Awake`.
+Set the `IHistSaveDataHandler` implemented above to HistoryTracker. Configure it in `Awake` as early as possible after
+the game starts.
 
 ```csharp
 void Awake()

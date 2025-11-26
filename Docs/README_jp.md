@@ -99,7 +99,7 @@ return new HistRecordInfo(title, description);
 
 ### 依存の設定
 
-上記で実装した`IHistSaveDataHandler`をHistoryTrackerに設定します。Awakeなどゲーム起動後できる限り早いタイミングで設定してください。
+上記で実装した`IHistSaveDataHandler`をHistoryTrackerに設定します。ゲーム起動後できる限り早いタイミングの`Awake`で設定してください。
 
 ```csharp
 void Awake()

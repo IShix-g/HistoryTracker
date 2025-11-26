@@ -113,7 +113,8 @@ void Awake()
 
 ### Opening the History Dialog
 
-Open the dialog via code. Although it is possible to release it with `Hist.Release()` when it is no longer needed, it is lightweight so this is unlikely to be an issue.
+The dialog is opened via script. You can release it by calling `Hist.Release()` when it's no longer needed, but since
+it's lightweight, this is unlikely to cause any issues.
 
 ```csharp
 using HistoryTracker;

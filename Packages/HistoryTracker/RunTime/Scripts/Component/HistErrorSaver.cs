@@ -1,5 +1,6 @@
 
 using System;
+using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -21,7 +22,7 @@ namespace HistoryTracker
 
         static HistErrorSaver s_instance;
 
-        string _pendingErrorLogs;
+        readonly StringBuilder _pendingErrorLogs = new ();
         float _saveDelayDuration = _defaultSaveDelayDuration;
         float _saveCooldownDuration = _defaultSaveCooldownDuration;
         float _saveDelayTimer;
@@ -89,6 +90,7 @@ namespace HistoryTracker
                     return;
                 }
             }
+
             if (_saveDelayTimer <= 0)
             {
                 return;
@@ -106,18 +108,22 @@ namespace HistoryTracker
             {
                 return;
             }
-            var message = $"[{DateTime.Now:yyyy.MM.dd HH:mm}] Scene : {SceneManager.GetActiveScene().name}\n[{type}] {condition}\n{stackTrace}\n";
-            _pendingErrorLogs += message;
+
+            _pendingErrorLogs.Append('[').Append(DateTime.Now.ToString("yyyy.MM.dd HH:mm")).Append("] Scene : ").Append(SceneManager.GetActiveScene().name).Append('\n');
+            _pendingErrorLogs.Append('[').Append(type).Append("] ").Append(condition).Append('\n');
+            _pendingErrorLogs.Append(stackTrace).Append('\n');
+
             _saveDelayTimer = _saveDelayDuration;
         }
 
         void SaveHistory()
         {
             var title = "[Error]";
-            var description = _pendingErrorLogs;
+            var description = _pendingErrorLogs.ToString();
             var info = new HistRecordInfo(title, description);
             Hist.SaveHistory(info);
-            _pendingErrorLogs = string.Empty;
+
+            _pendingErrorLogs.Length = 0;
             _cooldownTimer = _saveCooldownDuration;
         }
     }

@@ -108,7 +108,7 @@ namespace HistoryTracker
                 return;
             }
 
-            _pendingErrorLogs.Append('[').Append(DateTime.Now.ToString("yyyy.MM.dd HH:mm")).Append("] Scene : ").Append(SceneManager.GetActiveScene().name).Append('\n');
+            _pendingErrorLogs.Append('[').Append(DateTime.Now.ToString("g")).Append("] Scene : ").Append(SceneManager.GetActiveScene().name).Append('\n');
             _pendingErrorLogs.Append('[').Append(type).Append("] ").Append(condition).Append('\n');
             _pendingErrorLogs.Append(stackTrace).Append('\n');
 

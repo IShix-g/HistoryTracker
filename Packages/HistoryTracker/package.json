@@ -1,6 +1,6 @@
 {
   "name": "com.ishix.history.tracker",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "displayName": "History Tracker",
   "description": "This is a save data management plugin for Unity. It allows you to easily save and restore game states at any time.",
   "unity": "2022.3",

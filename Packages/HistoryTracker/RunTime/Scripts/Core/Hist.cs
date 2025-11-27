@@ -1,5 +1,8 @@
 
 using System;
+using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
 
 namespace HistoryTracker
 {
@@ -27,10 +30,16 @@ namespace HistoryTracker
         /// </example>
         public static void Configure(IHistSaveDataHandler handler)
         {
+#if DEBUG
+            var paths = handler.GetSaveFilePaths();
+            ValidSaveFilePaths(paths);
+#endif
+
             if (HistSettings.Current.IsScopeActive)
             {
                 LocaleProvider.Initialize();
                 s_manager ??= Create(handler);
+
 #if !UNITY_EDITOR
                 if (HistSettings.Current.IncludeRecordsInBuild)
                 {
@@ -97,6 +106,34 @@ namespace HistoryTracker
             var ui = CreateOrGetUI();
             ui.OpenDialog(autoRelease ? Release : null);
             return ui;
+        }
+
+        static void ValidSaveFilePaths(IReadOnlyList<string> paths)
+        {
+            var errorMsg = string.Empty;
+            foreach (var path in paths)
+            {
+                if (File.Exists(path))
+                {
+                    continue;
+                }
+
+                var msg = "- ";
+                if (Directory.Exists(path))
+                {
+                    msg += "Cannot specify a directory: ";
+                }
+                else
+                {
+                    msg += "Non-existent path: ";
+                }
+                errorMsg += msg + path + "\n";
+            }
+
+            if (!string.IsNullOrEmpty(errorMsg))
+            {
+                Debug.LogError("[HistoryTracker] Invalid save file paths: \n" + errorMsg);
+            }
         }
     }
 }

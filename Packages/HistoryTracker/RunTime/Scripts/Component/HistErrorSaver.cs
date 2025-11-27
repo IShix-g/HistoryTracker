@@ -91,14 +91,13 @@ namespace HistoryTracker
                 }
             }
 
-            if (_saveDelayTimer <= 0)
+            if (_saveDelayTimer > 0)
             {
-                return;
-            }
-            _saveDelayTimer -= Time.deltaTime;
-            if (_saveDelayTimer <= 0)
-            {
-                SaveHistory();
+                _saveDelayTimer -= Time.deltaTime;
+                if (_saveDelayTimer <= 0)
+                {
+                    SaveHistory();
+                }
             }
         }
 

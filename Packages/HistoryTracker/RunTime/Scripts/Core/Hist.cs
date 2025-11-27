@@ -108,26 +108,22 @@ namespace HistoryTracker
             return ui;
         }
 
+        /// <summary>
+        /// Checks a list of paths to ensure none of them are EXISTING directories (folders).
+        /// This validation is performed at startup, and the paths may not yet exist on the file system.
+        /// Paths that are currently files or do not exist are considered valid, as they are intended
+        /// to be used as file save paths later.
+        /// </summary>
+        /// <param name="paths">list of save data file paths</param>
         static void ValidSaveFilePaths(IReadOnlyList<string> paths)
         {
             var errorMsg = string.Empty;
             foreach (var path in paths)
             {
-                if (File.Exists(path))
-                {
-                    continue;
-                }
-
-                var msg = "- ";
                 if (Directory.Exists(path))
                 {
-                    msg += "Cannot specify a directory: ";
+                    errorMsg += "- Cannot specify a directory: " + path + "\n";
                 }
-                else
-                {
-                    msg += "Non-existent path: ";
-                }
-                errorMsg += msg + path + "\n";
             }
 
             if (!string.IsNullOrEmpty(errorMsg))

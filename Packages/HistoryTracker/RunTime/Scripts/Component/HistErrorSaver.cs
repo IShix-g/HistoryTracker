@@ -22,7 +22,7 @@ namespace HistoryTracker
 
         static HistErrorSaver s_instance;
 
-        readonly StringBuilder _pendingErrorLogs = new ();
+        StringBuilder _pendingErrorLogs;
         float _saveDelayDuration = _defaultSaveDelayDuration;
         float _saveCooldownDuration = _defaultSaveCooldownDuration;
         float _saveDelayTimer;
@@ -39,18 +39,6 @@ namespace HistoryTracker
             go.SetDuration(saveDelayDuration, saveCooldownDuration);
         }
 
-        public void SetDuration(float saveDelayDuration, float saveCooldownDuration)
-        {
-            if (saveDelayDuration > 0)
-            {
-                _saveDelayDuration = saveDelayDuration;
-            }
-            if (saveCooldownDuration > 0)
-            {
-                _saveCooldownDuration = saveCooldownDuration;
-            }
-        }
-
         void Awake()
         {
             if (!HistSettings.Current.IsScopeActive)
@@ -60,6 +48,7 @@ namespace HistoryTracker
             }
             if (s_instance == null)
             {
+                _pendingErrorLogs = new StringBuilder();
                 s_instance = this;
                 DontDestroyOnLoad(gameObject);
 #if UNITY_EDITOR
@@ -91,14 +80,25 @@ namespace HistoryTracker
                 }
             }
 
-            if (_saveDelayTimer <= 0)
+            if (_saveDelayTimer > 0)
             {
-                return;
+                _saveDelayTimer -= Time.deltaTime;
+                if (_saveDelayTimer <= 0)
+                {
+                    SaveHistory();
+                }
             }
-            _saveDelayTimer -= Time.deltaTime;
-            if (_saveDelayTimer <= 0)
+        }
+
+        public void SetDuration(float saveDelayDuration, float saveCooldownDuration)
+        {
+            if (saveDelayDuration > 0)
             {
-                SaveHistory();
+                _saveDelayDuration = saveDelayDuration;
+            }
+            if (saveCooldownDuration > 0)
+            {
+                _saveCooldownDuration = saveCooldownDuration;
             }
         }
 
@@ -109,7 +109,7 @@ namespace HistoryTracker
                 return;
             }
 
-            _pendingErrorLogs.Append('[').Append(DateTime.Now.ToString("yyyy.MM.dd HH:mm")).Append("] Scene : ").Append(SceneManager.GetActiveScene().name).Append('\n');
+            _pendingErrorLogs.Append('[').Append(DateTime.Now.ToString("g", LocaleProvider.Culture)).Append("] Scene : ").Append(SceneManager.GetActiveScene().name).Append('\n');
             _pendingErrorLogs.Append('[').Append(type).Append("] ").Append(condition).Append('\n');
             _pendingErrorLogs.Append(stackTrace).Append('\n');
 

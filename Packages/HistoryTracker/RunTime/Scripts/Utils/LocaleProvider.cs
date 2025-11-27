@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HistoryTracker
 {
-    public sealed class LocaleProvider
+    internal sealed class LocaleProvider
     {
         public static CultureInfo Culture { get; private set; }
 

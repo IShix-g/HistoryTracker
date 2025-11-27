@@ -29,6 +29,7 @@ namespace HistoryTracker
         {
             if (HistSettings.Current.IsScopeActive)
             {
+                LocaleProvider.Initialize();
                 s_manager ??= Create(handler);
 #if !UNITY_EDITOR
                 if (HistSettings.Current.IncludeRecordsInBuild)

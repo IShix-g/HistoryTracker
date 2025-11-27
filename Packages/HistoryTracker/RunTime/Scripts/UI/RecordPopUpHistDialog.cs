@@ -10,7 +10,7 @@ namespace HistoryTracker
         public event Action<HistRecord> OnValueChanged = delegate {};
         public event Action<HistRecord> OnRestore = delegate {};
         public event Action<HistRecord> OnDelete = delegate {};
-        
+
         [SerializeField] Button _restoreButton;
         [SerializeField] Button _deleteButton;
         [SerializeField] Button _closeButton;
@@ -23,9 +23,9 @@ namespace HistoryTracker
         [SerializeField] HistRecordObjectShower _descriptionShower;
         [SerializeField] RectTransform _caution;
         [SerializeField] RectTransform _editorIcon;
-        
+
         public HistRecord Record { get; private set; }
-        
+
         void Start()
         {
             _restoreButton.onClick.AddListener(OnRestoreButtonClicked);
@@ -50,8 +50,8 @@ namespace HistoryTracker
             _titleInput.text = Record.Title;
             _descriptionInput.text = Record.Description;
             var savedDate = DateTime.Parse(Record.TimeStamp);
-            _dateText.text = "Saved: " + savedDate.ToString("MM/dd HH:mm");
-            
+            _dateText.text = savedDate.ToString("g", LocaleProvider.Culture);
+
             _titleInput.gameObject.SetActive(false);
             _descriptionInput.gameObject.SetActive(false);
 
@@ -69,7 +69,7 @@ namespace HistoryTracker
         }
 
         protected override void OnCloseInternal(bool isAwake) {}
-        
+
         void OnRestoreButtonClicked()
         {
             if (IsOpen)
@@ -99,7 +99,7 @@ namespace HistoryTracker
             }
             _titleShower.Hide();
         }
-        
+
         void OnEndEditDescription(string text)
         {
             if (IsOpen && Record.Description != text)
@@ -110,7 +110,7 @@ namespace HistoryTracker
             }
             _descriptionShower.Hide();
         }
-        
+
         void TitleShowerOnShow() => _descriptionShower.Hide();
 
         void DescriptionShowerOnShow() => _titleShower.Hide();

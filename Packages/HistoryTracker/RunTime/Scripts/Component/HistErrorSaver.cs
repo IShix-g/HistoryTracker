@@ -22,7 +22,7 @@ namespace HistoryTracker
 
         static HistErrorSaver s_instance;
 
-        readonly StringBuilder _pendingErrorLogs = new ();
+        StringBuilder _pendingErrorLogs;
         float _saveDelayDuration = _defaultSaveDelayDuration;
         float _saveCooldownDuration = _defaultSaveCooldownDuration;
         float _saveDelayTimer;
@@ -39,18 +39,6 @@ namespace HistoryTracker
             go.SetDuration(saveDelayDuration, saveCooldownDuration);
         }
 
-        public void SetDuration(float saveDelayDuration, float saveCooldownDuration)
-        {
-            if (saveDelayDuration > 0)
-            {
-                _saveDelayDuration = saveDelayDuration;
-            }
-            if (saveCooldownDuration > 0)
-            {
-                _saveCooldownDuration = saveCooldownDuration;
-            }
-        }
-
         void Awake()
         {
             if (!HistSettings.Current.IsScopeActive)
@@ -60,6 +48,7 @@ namespace HistoryTracker
             }
             if (s_instance == null)
             {
+                _pendingErrorLogs = new StringBuilder();
                 s_instance = this;
                 DontDestroyOnLoad(gameObject);
 #if UNITY_EDITOR
@@ -101,6 +90,18 @@ namespace HistoryTracker
             }
         }
 
+        public void SetDuration(float saveDelayDuration, float saveCooldownDuration)
+        {
+            if (saveDelayDuration > 0)
+            {
+                _saveDelayDuration = saveDelayDuration;
+            }
+            if (saveCooldownDuration > 0)
+            {
+                _saveCooldownDuration = saveCooldownDuration;
+            }
+        }
+
         void OnLogMessageReceived(string condition, string stackTrace, LogType type)
         {
             if (type is not (LogType.Exception or LogType.Error or LogType.Assert))
@@ -108,7 +109,7 @@ namespace HistoryTracker
                 return;
             }
 
-            _pendingErrorLogs.Append('[').Append(DateTime.Now.ToString("g")).Append("] Scene : ").Append(SceneManager.GetActiveScene().name).Append('\n');
+            _pendingErrorLogs.Append('[').Append(DateTime.Now.ToString("g", LocaleProvider.Culture)).Append("] Scene : ").Append(SceneManager.GetActiveScene().name).Append('\n');
             _pendingErrorLogs.Append('[').Append(type).Append("] ").Append(condition).Append('\n');
             _pendingErrorLogs.Append(stackTrace).Append('\n');
 

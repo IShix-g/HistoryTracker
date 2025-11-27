@@ -1,5 +1,8 @@
 
 using System;
+using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
 
 namespace HistoryTracker
 {
@@ -27,10 +30,16 @@ namespace HistoryTracker
         /// </example>
         public static void Configure(IHistSaveDataHandler handler)
         {
+#if DEBUG
+            var paths = handler.GetSaveFilePaths();
+            ValidSaveFilePaths(paths);
+#endif
+
             if (HistSettings.Current.IsScopeActive)
             {
                 LocaleProvider.Initialize();
                 s_manager ??= Create(handler);
+
 #if !UNITY_EDITOR
                 if (HistSettings.Current.IncludeRecordsInBuild)
                 {
@@ -97,6 +106,30 @@ namespace HistoryTracker
             var ui = CreateOrGetUI();
             ui.OpenDialog(autoRelease ? Release : null);
             return ui;
+        }
+
+        /// <summary>
+        /// Checks a list of paths to ensure none of them are EXISTING directories (folders).
+        /// This validation is performed at startup, and the paths may not yet exist on the file system.
+        /// Paths that are currently files or do not exist are considered valid, as they are intended
+        /// to be used as file save paths later.
+        /// </summary>
+        /// <param name="paths">list of save data file paths</param>
+        static void ValidSaveFilePaths(IReadOnlyList<string> paths)
+        {
+            var errorMsg = string.Empty;
+            foreach (var path in paths)
+            {
+                if (Directory.Exists(path))
+                {
+                    errorMsg += "- Cannot specify a directory: " + path + "\n";
+                }
+            }
+
+            if (!string.IsNullOrEmpty(errorMsg))
+            {
+                Debug.LogError("[HistoryTracker] Invalid save file paths: \n" + errorMsg);
+            }
         }
     }
 }

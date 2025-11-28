@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace HistoryTracker
@@ -11,7 +12,7 @@ namespace HistoryTracker
         public const string DirectoryName = "HistoryTrackerRecords";
         public const string RecordsFileName = "Records.dat";
 
-        static HistManager s_manager;
+        static readonly HistManager s_manager = new ();
 
         /// <summary>
         /// Configure HistoryTracker.
@@ -30,23 +31,32 @@ namespace HistoryTracker
         /// </example>
         public static void Configure(IHistSaveDataHandler handler)
         {
-#if DEBUG
-            var paths = handler.GetSaveFilePaths();
-            ValidSaveFilePaths(paths);
-#endif
+            if (!HistSettings.Current.IsScopeActive)
+            {
+                return;
+            }
 
-            if (HistSettings.Current.IsScopeActive)
+            if (!LocaleProvider.IsInitialized)
             {
                 LocaleProvider.Initialize();
-                s_manager ??= Create(handler);
+            }
+#if UNITY_EDITOR
+            var service = new EditorHistDataService(DirectoryName);
+#else
+            var service = new PersistentHistDataService(DirectoryName);
+#endif
+            s_manager.Initialize(handler, service);
 
 #if !UNITY_EDITOR
-                if (HistSettings.Current.IncludeRecordsInBuild)
-                {
-                    StreamingAssetsRecordsInstaller.Install(s_manager);
-                }
-#endif
+            if (HistSettings.Current.IncludeRecordsInBuild)
+            {
+                StreamingAssetsRecordsInstaller.Install(s_manager);
             }
+#endif
+
+#if DEBUG
+            ValidSaveFilePathsAsync(handler).Handled();
+#endif
         }
 
         /// <summary>
@@ -64,16 +74,6 @@ namespace HistoryTracker
                 s_manager.SaveHistory(addInfo, placement);
                 s_manager.Save();
             }
-        }
-
-        static HistManager Create(IHistSaveDataHandler handler)
-        {
-#if UNITY_EDITOR
-            var service = new EditorHistDataService(DirectoryName);
-#else
-            var service = new PersistentHistDataService(DirectoryName);
-#endif
-            return s_manager = new HistManager(handler, service);
         }
 
         /// <summary>
@@ -106,6 +106,16 @@ namespace HistoryTracker
             var ui = CreateOrGetUI();
             ui.OpenDialog(autoRelease ? Release : null);
             return ui;
+        }
+
+        static async Task ValidSaveFilePathsAsync(IHistSaveDataHandler handler)
+        {
+            await Task.Delay(TimeSpan.FromSeconds(1));
+            if (handler != null)
+            {
+                var paths = handler.GetSaveFilePaths();
+                ValidSaveFilePaths(paths);
+            }
         }
 
         /// <summary>

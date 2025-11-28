@@ -13,6 +13,7 @@ namespace HistoryTracker
         public const string RecordsFileName = "Records.dat";
 
         static readonly HistManager s_manager = new ();
+        static IHistDataService s_dataService;
 
         /// <summary>
         /// Configure HistoryTracker.
@@ -35,17 +36,16 @@ namespace HistoryTracker
             {
                 return;
             }
-
             if (!LocaleProvider.IsInitialized)
             {
                 LocaleProvider.Initialize();
             }
 #if UNITY_EDITOR
-            var service = new EditorHistDataService(DirectoryName);
+            s_dataService ??= new EditorHistDataService(DirectoryName);
 #else
-            var service = new PersistentHistDataService(DirectoryName);
+            s_dataService ??= new PersistentHistDataService(DirectoryName);
 #endif
-            s_manager.Initialize(handler, service);
+            s_manager.Initialize(handler, s_dataService);
 
 #if !UNITY_EDITOR
             if (HistSettings.Current.IncludeRecordsInBuild)

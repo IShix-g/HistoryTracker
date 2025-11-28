@@ -17,6 +17,20 @@ A Unity plugin for saving and restoring game data (persistent data).
 - Manage data via a clean, easy-to-read UI.
 - Use data saved in the Editor on actual devices.
 
+### Technical Requirements
+
+#### Asset Loading Methods
+
+- Prefabs are loaded using [Resources.Load](https://docs.unity3d.com/ja/2023.2/ScriptReference/Resources.Load.html) *
+- For device builds, [StreamingAssets](https://docs.unity3d.com/ja/2023.2/Manual/StreamingAssets.html) is used *
+
+* **Build Optimization:** These assets are included in the game build only when the plugin is enabled. When the plugin
+  is disabled, the assets are excluded and not packaged with the application.
+
+#### Testing Environment
+
+- Device testing has been conducted on **iOS** and **Android**.
+
 ## Why HistoryTracker?
 
 ### 1. Focused Debugging of RNG Elements
@@ -221,6 +235,3 @@ void Start()
     HistErrorSaver.Create();
 }
 ```
-
-## API Used for Asset Loading
-`Resources.Load` - Used for loading UI assets at runtime on actual devices (e.g., mobile phones). Assets loaded via this API are only included in the final game build if the associated plugin is enabled. If the plugin is disabled, the assets are omitted (stripped) and will not be packaged with the application.

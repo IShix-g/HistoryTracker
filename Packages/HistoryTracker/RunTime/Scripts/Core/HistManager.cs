@@ -14,13 +14,10 @@ namespace HistoryTracker
         public HistRecords Records => _service.GetRecords();
         public bool IsStartApply { get; private set; }
 
-        readonly IHistSaveDataHandler _handler;
-        readonly IHistDataService _service;
+        IHistSaveDataHandler _handler;
+        IHistDataService _service;
 
-        public HistManager(
-            IHistSaveDataHandler handler,
-            IHistDataService service
-        )
+        public void Initialize(IHistSaveDataHandler handler, IHistDataService service)
         {
             _handler = handler;
             _service = service;

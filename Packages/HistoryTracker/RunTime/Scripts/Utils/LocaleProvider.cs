@@ -6,6 +6,7 @@ namespace HistoryTracker
 {
     internal sealed class LocaleProvider
     {
+        public static bool IsInitialized => Culture != null;
         public static CultureInfo Culture { get; private set; }
 
         public static void Initialize()

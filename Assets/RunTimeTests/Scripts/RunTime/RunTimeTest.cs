@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using HistoryTracker;
+using UnityEngine.SceneManagement;
 
 namespace Tests
 {
@@ -10,6 +11,7 @@ namespace Tests
         [SerializeField] Button _dialogButton;
         [SerializeField] Button _saveButton;
         [SerializeField] Button _errorButton;
+        [SerializeField] Button _reloadButton;
 
         TestModelRepository _repository;
 
@@ -24,6 +26,7 @@ namespace Tests
             _dialogButton.onClick.AddListener(OnDialogButtonClicked);
             _saveButton.onClick.AddListener(OnSaveButtonClicked);
             _errorButton.onClick.AddListener(OnErrorButtonClicked);
+            _reloadButton.onClick.AddListener(OnReloadButtonClicked);
         }
 
         void OnDialogButtonClicked() => Hist.OpenDialog();
@@ -35,6 +38,8 @@ namespace Tests
         }
 
         void OnErrorButtonClicked() => throw new System.Exception("Test Exception");
+
+        void OnReloadButtonClicked() => SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
         public sealed class User
         {

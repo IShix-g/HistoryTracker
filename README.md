@@ -21,10 +21,11 @@ A Unity plugin for saving and restoring game data (persistent data).
 
 #### Asset Loading Methods
 
-- Prefabs are loaded using [Resources.Load](https://docs.unity3d.com/ja/2023.2/ScriptReference/Resources.Load.html) *
-- For device builds, [StreamingAssets](https://docs.unity3d.com/ja/2023.2/Manual/StreamingAssets.html) is used *
+- Prefabs are loaded using [Resources.Load](https://docs.unity3d.com/ja/2023.2/ScriptReference/Resources.Load.html) \*
+- For actual device game data output, [StreamingAssets](https://docs.unity3d.com/ja/2023.2/Manual/StreamingAssets.html)
+  is used \*
 
-* **Build Optimization:** These assets are included in the game build only when the plugin is enabled. When the plugin
+\* **Build Optimization:** These assets are included in the game build only when the plugin is enabled. When the plugin
   is disabled, the assets are excluded and not packaged with the application.
 
 #### Testing Environment

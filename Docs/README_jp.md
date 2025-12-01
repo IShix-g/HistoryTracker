@@ -21,10 +21,10 @@
 
 #### アセットの読み込み方法
 
-- Prefabの読み込みには、[Resources.Load](https://docs.unity3d.com/ja/2023.2/ScriptReference/Resources.Load.html)を使用しています *
-- 実機向けビルドには、[StreamingAssets](https://docs.unity3d.com/ja/2023.2/Manual/StreamingAssets.html)を使用しています *
+- Prefabの読み込みには、[Resources.Load](https://docs.unity3d.com/ja/2023.2/ScriptReference/Resources.Load.html)を使用しています \*
+- 実機向けゲームデータの出力先には、[StreamingAssets](https://docs.unity3d.com/ja/2023.2/Manual/StreamingAssets.html)を使用しています \*
 
-* **ビルドの最適化:** これらのアセットは、プラグインが有効な時のみゲームのビルド結果に含まれます。プラグインが無効な場合、アセットはアプリに含まれず省かれます。
+\* **ビルドの最適化:** これらのアセットは、プラグインが有効な時のみゲームのビルド結果に含まれます。プラグインが無効な場合、アセットはアプリに含まれず省かれます。
 
 #### 動作確認環境
 - 実機テストは **iOS** および **Android** で実施しています。

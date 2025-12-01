@@ -117,6 +117,25 @@ public void ApplyData(HistAppliedInfo info)
 }
 ```
 
+`ApplyData()`でゲームデータをロード後、ゲームを閉じる例:
+
+```csharp
+public void ApplyData()
+{
+    // Reload game data
+    _saveSystem.Load();
+
+    // Quit the application
+#if UNITY_EDITOR
+    Debug.Log("Stopping play mode to apply save data.");
+    UnityEditor.EditorApplication.isPlaying = false;
+#else
+    Debug.Log("Quitting application to apply save data.");
+    Application.Quit();
+#endif
+}
+```
+
 ### HistRecordInfo
 
 上記の`OnBeforeSave()`で設定したタイトルと説明は、UIで下記のように表示されます。

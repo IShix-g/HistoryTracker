@@ -24,6 +24,6 @@ namespace HistoryTracker
         /// Called after save data is applied
         /// Note: Typically used for operations like exiting the application.
         /// </summary>
-        void ApplyData();
+        void ApplyData(HistAppliedInfo info);
     }
 }

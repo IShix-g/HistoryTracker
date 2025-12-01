@@ -70,7 +70,7 @@ Implement `IHistSaveDataHandler` to link your save system with HistoryTracker.
 |--------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
 | OnBeforeSave()     | Called immediately before saving. Save necessary game data and return the title and description. This content will be displayed in the UI. |
 | GetSaveFilePaths() | Returns an array of full paths to game data files. e.g., `Application.persistentDataPath` + "/data.bytes"                                  
-| ApplyData()        | Called after game data has been restored. Reflect the game data by reloading it or by calling `Application.Quit()` to close the app once.  |
+| ApplyData(info)        | Called after game data has been restored. Reflect the game data by reloading it or by calling `Application.Quit()` to close the app once.  |
 
 ```csharp
 using HistoryTracker;
@@ -96,14 +96,14 @@ public sealed class TestModelRepository : ModelRepository, IHistSaveDataHandler
     // e.g. `Application.persistentDataPath` + "/data.bytes" 
     public IReadOnlyList<string> GetSaveFilePaths() => Paths.Values.ToList();
 
-    public void ApplyData() => Restored();
+    public void ApplyData(HistAppliedInfo info) => Restored();
 }
 ```
 
 Example of loading game data with `ApplyData()` and then closing the game:
 
 ```csharp
-public void ApplyData()
+public void ApplyData(HistAppliedInfo info)
 {
     // Reload game data
     _saveSystem.Load();

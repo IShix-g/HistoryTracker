@@ -68,7 +68,7 @@ https://github.com/IShix-g/HistoryTracker.git?path=Packages/HistoryTracker#v1
 |--------------------|---------------------------------------------------------------------------------------------|
 | OnBeforeSave()     | セーブする直前に呼ばれます。保存が必要なゲームデータを保存し、タイトルと説明を返します。この内容はUIに表示されます                                  |
 | GetSaveFilePaths() | ゲームデータのフルパスを配列で返します。例) `Application.persistentDataPath` + "/data.bytes"                     
-| ApplyData()        | ゲームデータが復元された後に呼ばれます。ゲームデータをロードし直す、または、`Application.Quit()`を呼んで一度アプリを閉じるなどの処理でゲームデータを反映させます。 |
+| ApplyData(info)        | ゲームデータが復元された後に呼ばれます。ゲームデータをロードし直す、または、`Application.Quit()`を呼んで一度アプリを閉じるなどの処理でゲームデータを反映させます。 |
 
 ```csharp
 using HistoryTracker;
@@ -94,14 +94,14 @@ public sealed class TestModelRepository : ModelRepository, IHistSaveDataHandler
     // e.g. `Application.persistentDataPath` + "/data.bytes" 
     public IReadOnlyList<string> GetSaveFilePaths() => Paths.Values.ToList();
 
-    public void ApplyData() => Restored();
+    public void ApplyData(HistAppliedInfo info) => Restored();
 }
 ```
 
 `ApplyData()`でゲームデータをロード後、ゲームを閉じる例:
 
 ```csharp
-public void ApplyData()
+public void ApplyData(HistAppliedInfo info)
 {
     // Reload game data
     _saveSystem.Load();

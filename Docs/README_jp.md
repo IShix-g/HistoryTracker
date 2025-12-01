@@ -21,10 +21,10 @@
 
 #### アセットの読み込み方法
 
-- Prefabの読み込みには、[Resources.Load](https://docs.unity3d.com/ja/2023.2/ScriptReference/Resources.Load.html)を使用しています *
-- 実機向けビルドには、[StreamingAssets](https://docs.unity3d.com/ja/2023.2/Manual/StreamingAssets.html)を使用しています *
+- Prefabの読み込みには、[Resources.Load](https://docs.unity3d.com/ja/2023.2/ScriptReference/Resources.Load.html)を使用しています \*
+- 実機向けゲームデータの出力先には、[StreamingAssets](https://docs.unity3d.com/ja/2023.2/Manual/StreamingAssets.html)を使用しています \*
 
-* **ビルドの最適化:** これらのアセットは、プラグインが有効な時のみゲームのビルド結果に含まれます。プラグインが無効な場合、アセットはアプリに含まれず省かれます。
+\* **ビルドの最適化:** これらのアセットは、プラグインが有効な時のみゲームのビルド結果に含まれます。プラグインが無効な場合、アセットはアプリに含まれず省かれます。
 
 #### 動作確認環境
 - 実機テストは **iOS** および **Android** で実施しています。
@@ -68,7 +68,7 @@ https://github.com/IShix-g/HistoryTracker.git?path=Packages/HistoryTracker#v1
 |--------------------|---------------------------------------------------------------------------------------------|
 | OnBeforeSave()     | セーブする直前に呼ばれます。保存が必要なゲームデータを保存し、タイトルと説明を返します。この内容はUIに表示されます                                  |
 | GetSaveFilePaths() | ゲームデータのフルパスを配列で返します。例) `Application.persistentDataPath` + "/data.bytes"                     
-| ApplyData()        | ゲームデータが復元された後に呼ばれます。ゲームデータをロードし直す、または、`Application.Quit()`を呼んで一度アプリを閉じるなどの処理でゲームデータを反映させます。 |
+| ApplyData(info)        | ゲームデータが復元された後に呼ばれます。ゲームデータをロードし直す、または、`Application.Quit()`を呼んで一度アプリを閉じるなどの処理でゲームデータを反映させます。 |
 
 ```csharp
 using HistoryTracker;
@@ -94,7 +94,26 @@ public sealed class TestModelRepository : ModelRepository, IHistSaveDataHandler
     // e.g. `Application.persistentDataPath` + "/data.bytes" 
     public IReadOnlyList<string> GetSaveFilePaths() => Paths.Values.ToList();
 
-    public void ApplyData() => Restored();
+    public void ApplyData(HistAppliedInfo info) => Restored();
+}
+```
+
+`ApplyData()`でゲームデータをロード後、ゲームを閉じる例:
+
+```csharp
+public void ApplyData(HistAppliedInfo info)
+{
+    // Reload game data
+    _saveSystem.Load();
+
+    // Quit the application
+#if UNITY_EDITOR
+    Debug.Log("Stopping play mode to apply save data.");
+    UnityEditor.EditorApplication.isPlaying = false;
+#else
+    Debug.Log("Quitting application to apply save data.");
+    Application.Quit();
+#endif
 }
 ```
 

@@ -21,10 +21,11 @@ A Unity plugin for saving and restoring game data (persistent data).
 
 #### Asset Loading Methods
 
-- Prefabs are loaded using [Resources.Load](https://docs.unity3d.com/ja/2023.2/ScriptReference/Resources.Load.html) *
-- For device builds, [StreamingAssets](https://docs.unity3d.com/ja/2023.2/Manual/StreamingAssets.html) is used *
+- Prefabs are loaded using [Resources.Load](https://docs.unity3d.com/ja/2023.2/ScriptReference/Resources.Load.html) \*
+- For actual device game data output, [StreamingAssets](https://docs.unity3d.com/ja/2023.2/Manual/StreamingAssets.html)
+  is used \*
 
-* **Build Optimization:** These assets are included in the game build only when the plugin is enabled. When the plugin
+\* **Build Optimization:** These assets are included in the game build only when the plugin is enabled. When the plugin
   is disabled, the assets are excluded and not packaged with the application.
 
 #### Testing Environment
@@ -70,7 +71,7 @@ Implement `IHistSaveDataHandler` to link your save system with HistoryTracker.
 |--------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
 | OnBeforeSave()     | Called immediately before saving. Save necessary game data and return the title and description. This content will be displayed in the UI. |
 | GetSaveFilePaths() | Returns an array of full paths to game data files. e.g., `Application.persistentDataPath` + "/data.bytes"                                  
-| ApplyData()        | Called after game data has been restored. Reflect the game data by reloading it or by calling `Application.Quit()` to close the app once.  |
+| ApplyData(info)        | Called after game data has been restored. Reflect the game data by reloading it or by calling `Application.Quit()` to close the app once.  |
 
 ```csharp
 using HistoryTracker;
@@ -96,7 +97,26 @@ public sealed class TestModelRepository : ModelRepository, IHistSaveDataHandler
     // e.g. `Application.persistentDataPath` + "/data.bytes" 
     public IReadOnlyList<string> GetSaveFilePaths() => Paths.Values.ToList();
 
-    public void ApplyData() => Restored();
+    public void ApplyData(HistAppliedInfo info) => Restored();
+}
+```
+
+Example of loading game data with `ApplyData()` and then closing the game:
+
+```csharp
+public void ApplyData(HistAppliedInfo info)
+{
+    // Reload game data
+    _saveSystem.Load();
+
+    // Quit the application
+#if UNITY_EDITOR
+    Debug.Log("Stopping play mode to apply save data.");
+    UnityEditor.EditorApplication.isPlaying = false;
+#else
+    Debug.Log("Quitting application to apply save data.");
+    Application.Quit();
+#endif
 }
 ```
 

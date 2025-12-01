@@ -9,7 +9,7 @@ namespace HistoryTracker
         public event Action<HistRecord> OnAddRecord = delegate {};
         public event Action<HistRecord> OnRemoveRecord = delegate {};
         public event Action OnStartApply = delegate {};
-        public event Action OnEndApply = delegate {};
+        public event Action<HistAppliedInfo> OnEndApply = delegate {};
 
         public HistRecords Records => _service.GetRecords();
         public bool IsStartApply { get; private set; }
@@ -58,12 +58,15 @@ namespace HistoryTracker
             _service.Apply(record, paths, isSuccess =>
             {
                 IsStartApply = false;
-                onFinished?.Invoke(isSuccess);
-                OnEndApply();
+                var info = default(HistAppliedInfo);
                 if (isSuccess)
                 {
-                    _handler.ApplyData();
+                    var savedDate = DateTime.Parse(record.TimeStamp);
+                    info = new HistAppliedInfo(record.Id, record.Title, savedDate);
+                    _handler.ApplyData(info);
                 }
+                onFinished?.Invoke(isSuccess);
+                OnEndApply(info);
             });
         }
 

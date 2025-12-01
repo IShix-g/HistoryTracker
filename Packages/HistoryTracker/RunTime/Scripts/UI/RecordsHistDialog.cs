@@ -158,7 +158,7 @@ namespace HistoryTracker
             _prevButton.interactable = false;
         }
 
-        void OnEndApply()
+        void OnEndApply(HistAppliedInfo info)
         {
             _saveButton.interactable = true;
             _closeButton.interactable = true;

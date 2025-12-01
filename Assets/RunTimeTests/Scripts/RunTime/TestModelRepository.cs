@@ -22,7 +22,7 @@ namespace Tests
 
         IReadOnlyList<string> IHistSaveDataHandler.GetSaveFilePaths() => Paths.Values.ToList();
 
-        void IHistSaveDataHandler.ApplyData() => Restored();
+        void IHistSaveDataHandler.ApplyData(HistAppliedInfo info) => Restored();
     }
 }
 #endif

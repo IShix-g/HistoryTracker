@@ -224,14 +224,15 @@ By default, this plugin operates only in the debug environment. You can adjust t
 
 ### Settings
 
-<img src="Docs/settings.jpg" width="400"/>
+<img src="Docs/settings.jpg" width="450"/>
 
-| No | Description                                         |
-|----|-----------------------------------------------------|
-| ①  | Show GitHub Page (External Link)                    |
-| ②  | Open History Dialog (Runtime only)                  |
-| ③  | Plugin Scope (EditorOnly / DevelopmentBuild / All) |
-| ④  | Use game data saved in Editor on actual device?        |
+| No | Description |
+|----|-----------------------------------------------------------------------------------|
+| ①  | Show GitHub Page (External Link)                                                  |
+| ②  | Open History Dialog (Runtime only)                                                |
+| ③  | Plugin Scope (EditorOnly / DevelopmentBuild / All)                                |
+| ④  | Use game data saved in Editor on actual device?                                   |
+| ⑤  | Enable adding title and description to History Dialog save feature (Runtime only) |
 
 ## Saving Game Data via Script
 

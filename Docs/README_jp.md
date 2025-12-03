@@ -210,14 +210,14 @@ void OnDialogButtonClicked()
 
 * 実機の場合、Editorで生成されたデータを編集できません。
 
-## プラグインの設定
+## プラグインの設定 / History Recorder
 
 このプラグインは、デフォルトでデバック環境でのみ動作します。それを設定で調整できます。
 
-### `Window > HistoryTracker > open Settings`で開く
+### `Window > open History Tracker`で開く
 <img src="menu.jpg" width="700"/>
 
-### 設定
+### ダイアログ
 
 <img src="settings.jpg" width="450"/>
 

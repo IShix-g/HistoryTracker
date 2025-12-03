@@ -14,11 +14,11 @@ namespace HistoryTracker.Editor
         const string _packageName = "com.ishix.history.tracker";
         const string _logoPath = PackagePath + "Editor/Textures/historyTrackerLogo.png";
 
-        [MenuItem("Window/HistoryTracker/open Settings", priority = 0)]
+        [MenuItem("Window/open History Tracker", priority = 0)]
         static void ShowWindow()
         {
             var window = GetWindow<HistSettingsWindow>();
-            window.titleContent = new GUIContent("HistoryTracker Settings");
+            window.titleContent = new GUIContent("History Tracker");
             window.Show();
         }
 

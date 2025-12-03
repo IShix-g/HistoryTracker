@@ -196,7 +196,7 @@ Displays a list of saved history.
 | ⑥  | Next Page            |
 | ⑦  | Close                |
 
-### 詳細
+### Details
 
 Details and operations for saved game data.
 
@@ -215,14 +215,14 @@ Details and operations for saved game data.
 
 * Note: On actual devices, you cannot edit data generated in the Editor.
 
-## Plugin Settings
+## Plugin Settings / History Recorder
 
 By default, this plugin operates only in the debug environment. You can adjust this in the settings.
 
-### Open via `Window > HistoryTracker > open Settings`
+### Open via `Window > open History Tracker`
 <img src="Docs/menu.jpg" width="700"/>
 
-### Settings
+### Dialog
 
 <img src="Docs/settings.jpg" width="450"/>
 

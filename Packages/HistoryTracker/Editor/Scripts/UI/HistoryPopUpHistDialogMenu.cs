@@ -6,7 +6,6 @@ namespace HistoryTracker.Editor
 {
     internal sealed class HistoryPopUpHistDialogMenu
     {
-        [MenuItem("Window/HistoryTracker/open History dialog (Play mode only)")]
         public static void ShowDialog()
         {
             if (Application.isPlaying)

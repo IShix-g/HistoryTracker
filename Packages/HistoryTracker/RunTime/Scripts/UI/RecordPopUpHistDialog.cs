@@ -14,6 +14,7 @@ namespace HistoryTracker
         [SerializeField] Button _restoreButton;
         [SerializeField] Button _deleteButton;
         [SerializeField] Button _closeButton;
+        [SerializeField] Text _idText;
         [SerializeField] Text _titleText;
         [SerializeField] Text _descriptionText;
         [SerializeField] Text _dateText;
@@ -45,6 +46,7 @@ namespace HistoryTracker
 
         protected override void OnOpenInternal()
         {
+            _idText.text = "ID:" + Record.Id;
             _titleText.text = Record.Title;
             _descriptionText.text = Record.Description;
             _titleInput.text = Record.Title;

@@ -196,7 +196,7 @@ Displays a list of saved history.
 | ⑥  | Next Page            |
 | ⑦  | Close                |
 
-### 詳細
+### Details
 
 Details and operations for saved game data.
 
@@ -215,23 +215,24 @@ Details and operations for saved game data.
 
 * Note: On actual devices, you cannot edit data generated in the Editor.
 
-## Plugin Settings
+## Plugin Settings / History Recorder
 
 By default, this plugin operates only in the debug environment. You can adjust this in the settings.
 
-### Open via `Window > HistoryTracker > open Settings`
+### Open via `Window > open History Tracker`
 <img src="Docs/menu.jpg" width="700"/>
 
-### Settings
+### Dialog
 
-<img src="Docs/settings.jpg" width="400"/>
+<img src="Docs/settings.jpg" width="450"/>
 
-| No | Description                                         |
-|----|-----------------------------------------------------|
-| ①  | Show GitHub Page (External Link)                    |
-| ②  | Open History Dialog (Runtime only)                  |
-| ③  | Plugin Scope (EditorOnly / DevelopmentBuild / All) |
-| ④  | Use game data saved in Editor on actual device?        |
+| No | Description |
+|----|-----------------------------------------------------------------------------------|
+| ①  | Show GitHub Page (External Link)                                                  |
+| ②  | Open History Dialog (Runtime only)                                                |
+| ③  | Plugin Scope (EditorOnly / DevelopmentBuild / All)                                |
+| ④  | Use game data saved in Editor on actual device?                                   |
+| ⑤  | Enable adding title and description to History Dialog save feature (Runtime only) |
 
 ## Saving Game Data via Script
 

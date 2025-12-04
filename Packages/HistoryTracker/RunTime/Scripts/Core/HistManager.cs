@@ -8,6 +8,8 @@ namespace HistoryTracker
     {
         public event Action<HistRecord> OnAddRecord = delegate {};
         public event Action<HistRecord> OnRemoveRecord = delegate {};
+        public event Action<HistRecord> OnRestored = delegate {};
+        public event Action OnEmptyTrash = delegate {};
         public event Action OnStartApply = delegate {};
         public event Action<HistAppliedInfo> OnEndApply = delegate {};
 
@@ -40,12 +42,6 @@ namespace HistoryTracker
             return record;
         }
 
-        public void Remove(HistRecord record)
-        {
-            _service.Remove(record);
-            OnRemoveRecord(record);
-        }
-
         public void Apply(HistRecord record, Action<bool> onFinished = null)
         {
             if (IsStartApply)
@@ -68,6 +64,28 @@ namespace HistoryTracker
                 onFinished?.Invoke(isSuccess);
                 OnEndApply(info);
             });
+        }
+
+        public void MoveToTrash(HistRecord record)
+        {
+            _service.MoveToTrash(record);
+            OnRemoveRecord(record);
+        }
+
+        public void RestoreFromTrash(HistRecord record)
+        {
+            _service.RestoreFromTrash(record);
+            OnRestored(record);
+        }
+
+        public void EmptyTrash()
+        {
+            if (!_service.GetRecords().HasTrashRecords)
+            {
+                return;
+            }
+            _service.EmptyTrash();
+            OnEmptyTrash();
         }
 
         string MergeRecordText(HistRecordInfoPlacement placement, string baseText, string addText)

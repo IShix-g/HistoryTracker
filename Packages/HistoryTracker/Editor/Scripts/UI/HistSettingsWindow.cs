@@ -59,10 +59,14 @@ namespace HistoryTracker.Editor
             });
         }
 
-        void OnDestroy()
+        void OnDisable()
         {
             Title = _title;
             Description = _description;
+        }
+
+        void OnDestroy()
+        {
             _logo = null;
             _updateIcon = null;
             _helpHeader = null;

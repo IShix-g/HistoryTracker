@@ -80,17 +80,6 @@ namespace HistoryTracker
             return record;
         }
 
-        public void Remove(HistRecord record)
-        {
-            var id = record.Id;
-            var path = Path.Combine(RootDir, id);
-            if (Directory.Exists(path))
-            {
-                Directory.Delete(path, true);
-            }
-            _records.Remove(record);
-        }
-
         public HistRecord Set(string recordId, IReadOnlyList<string> paths)
         {
             var record = _records.GetOrCreateById(recordId);
@@ -131,11 +120,11 @@ namespace HistoryTracker
             var notAppliedRecordPaths = ListPool<string>.Get();
             var unusedPaths = ListPool<string>.Get();
             var tasks = ListPool<Task>.Get();
-            
+
             try
             {
                 var usedPathsFlags = new bool[paths.Count];
-                
+
                 foreach (var recordPath in record.Paths)
                 {
                     if (!recordPath.StartsWith(idString, StringComparison.Ordinal))
@@ -215,7 +204,27 @@ namespace HistoryTracker
                 ListPool<Task>.Release(tasks);
             }
         }
-        
+
+        public IReadOnlyList<HistRecord> GetTrashRecords() => _records.GetTrashRecords();
+
+        public void MoveToTrash(HistRecord record) => _records.MoveToTrash(record);
+
+        public void RestoreFromTrash(HistRecord record) => _records.RestoreFromTrash(record);
+
+        public void EmptyTrash()
+        {
+            foreach (var record in _records.GetTrashRecords())
+            {
+                var id = record.Id;
+                var path = Path.Combine(RootDir, id);
+                if (Directory.Exists(path))
+                {
+                    Directory.Delete(path, true);
+                }
+            }
+            _records.EmptyTrash();
+        }
+
         void EnsureCopy(string source, string target)
         {
             var targetDir = Path.GetDirectoryName(target);

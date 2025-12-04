@@ -12,9 +12,11 @@ namespace HistoryTracker
         [SerializeField] Button _closeButton;
         [SerializeField] Button _nextButton;
         [SerializeField] Button _prevButton;
+        [SerializeField] Button _trashButton;
         [SerializeField] Text _pagerText;
         [SerializeField] RecordPopUpHistDialog _recordPopUp;
         [SerializeField] RecordsHistDialogContent[] _contents;
+        [SerializeField] TrashRecordsHistDialog _trashDialog;
 
         HistContentsPager _pager;
         bool _isFirstOpen = true;
@@ -29,6 +31,9 @@ namespace HistoryTracker
             {
                 _manager.OnAddRecord -= OnAddRecord;
                 _manager.OnRemoveRecord -= OnRemoveRecord;
+                _manager.OnStartApply -= OnStartApply;
+                _manager.OnEndApply -= OnEndApply;
+                _manager.OnRestored -= OnRestored;
                 _isFirstOpen = true;
             }
             _manager = manager;
@@ -36,6 +41,8 @@ namespace HistoryTracker
             _manager.OnRemoveRecord += OnRemoveRecord;
             _manager.OnStartApply += OnStartApply;
             _manager.OnEndApply += OnEndApply;
+            _manager.OnRestored += OnRestored;
+            _trashDialog.Initialize(manager);
         }
 
         void Start()
@@ -51,6 +58,7 @@ namespace HistoryTracker
             _closeButton.onClick.AddListener(Close);
             _nextButton.onClick.AddListener(OnNextButtonClicked);
             _prevButton.onClick.AddListener(OnPrevButtonClicked);
+            _trashButton.onClick.AddListener(OnTrashButtonClicked);
         }
 
         void OnDestroy()
@@ -63,6 +71,7 @@ namespace HistoryTracker
             _manager.OnRemoveRecord -= OnRemoveRecord;
             _manager.OnStartApply -= OnStartApply;
             _manager.OnEndApply -= OnEndApply;
+            _manager.OnRestored -= OnRestored;
         }
 
         public void Open(Action closeAction = null)
@@ -86,8 +95,7 @@ namespace HistoryTracker
             }
             _isFirstOpen = false;
             _prevRecordsLength = _manager.Records.Length;
-            SetUp();
-            LoadContents();
+            Refresh(true);
         }
 
         protected override void OnCloseInternal(bool isAwake)
@@ -99,6 +107,10 @@ namespace HistoryTracker
             }
             _closeAction?.Invoke();
             _closeAction = null;
+            if (_trashDialog.IsOpen)
+            {
+                _trashDialog.Close();
+            }
         }
 
         void SetUp()
@@ -135,23 +147,44 @@ namespace HistoryTracker
             _prevButton.gameObject.SetActive(_pager.HasPrev);
         }
 
+        void Refresh(bool resetPage = false)
+        {
+            if (resetPage)
+            {
+                SetUp();
+            }
+            else
+            {
+                var length = _manager.Records.Length;
+                _pager.UpdateLength(length);
+            }
+            LoadContents();
+        }
+
         void OnClickContent(HistRecord record) => _recordPopUp.Open(record);
 
         void OnAddRecord(HistRecord record)
         {
-            SetUp();
-            LoadContents();
+            if (IsOpen)
+            {
+                Refresh(true);
+            }
         }
 
         void OnRemoveRecord(HistRecord record)
         {
-            var length = _manager.Records.Length;
-            _pager.UpdateLength(length);
-            LoadContents();
+            if (IsOpen)
+            {
+                Refresh();
+            }
         }
 
         void OnStartApply()
         {
+            if (!IsOpen)
+            {
+                return;
+            }
             _saveButton.interactable = false;
             _closeButton.interactable = false;
             _nextButton.interactable = false;
@@ -160,10 +193,22 @@ namespace HistoryTracker
 
         void OnEndApply(HistAppliedInfo info)
         {
+            if (!IsOpen)
+            {
+                return;
+            }
             _saveButton.interactable = true;
             _closeButton.interactable = true;
             _nextButton.interactable = true;
             _prevButton.interactable = true;
+        }
+
+        void OnRestored(HistRecord record)
+        {
+            if (IsOpen)
+            {
+                Refresh();
+            }
         }
 
         void OnSaveButtonClicked()
@@ -190,6 +235,14 @@ namespace HistoryTracker
             }
         }
 
+        void OnTrashButtonClicked()
+        {
+            if (!_trashDialog.IsOpen)
+            {
+                _trashDialog.Open();
+            }
+        }
+
         void PopUpOnRestore(HistRecord record)
         {
             _manager.Apply(record, isSuccess =>
@@ -203,7 +256,7 @@ namespace HistoryTracker
 
         void PopUpOnDelete(HistRecord record)
         {
-            _manager.Remove(record);
+            _manager.MoveToTrash(record);
             _manager.Save();
         }
 

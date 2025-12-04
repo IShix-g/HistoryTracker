@@ -62,11 +62,13 @@ namespace HistoryTracker
             _descriptionShower.enabled = true;
             _caution.gameObject.SetActive(false);
             _editorIcon.gameObject.SetActive(true);
+            _deleteButton.gameObject.SetActive(true);
 #else
             _titleShower.enabled = !Record.IsStreamingAssets;
             _descriptionShower.enabled = !Record.IsStreamingAssets;
             _caution.gameObject.SetActive(Record.IsStreamingAssets);
             _editorIcon.gameObject.SetActive(Record.IsStreamingAssets);
+            _deleteButton.gameObject.SetActive(Record.IsStreamingAssets);
 #endif
         }
 

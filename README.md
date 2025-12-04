@@ -177,7 +177,8 @@ Displays a list of saved history.
 | ④  | Open Details         |
 | ⑤  | Previous Page        |
 | ⑥  | Next Page            |
-| ⑦  | Close                |
+| ⑦  | Trash                |
+| ⑧  | Close                |
 
 ### Details
 

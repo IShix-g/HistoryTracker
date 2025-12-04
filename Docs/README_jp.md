@@ -117,25 +117,6 @@ public void ApplyData(HistAppliedInfo info)
 }
 ```
 
-`ApplyData()`でゲームデータをロード後、ゲームを閉じる例:
-
-```csharp
-public void ApplyData()
-{
-    // Reload game data
-    _saveSystem.Load();
-
-    // Quit the application
-#if UNITY_EDITOR
-    Debug.Log("Stopping play mode to apply save data.");
-    UnityEditor.EditorApplication.isPlaying = false;
-#else
-    Debug.Log("Quitting application to apply save data.");
-    Application.Quit();
-#endif
-}
-```
-
 ### HistRecordInfo
 
 上記の`OnBeforeSave()`で設定したタイトルと説明は、UIで下記のように表示されます。
@@ -153,6 +134,8 @@ return new HistRecordInfo(title, description);
 上記で実装した`IHistSaveDataHandler`をHistoryTrackerに設定します。ゲーム起動後できる限り早いタイミングの`Awake`で設定してください。
 
 ```csharp
+using HistoryTracker;
+
 void Awake()
 {
     // Initialize the repository that implements IHistSaveDataHandler in Awake
@@ -245,6 +228,8 @@ Hist.SaveHistory();
 
 <b>コード例:</b>
 ```csharp
+using HistoryTracker;
+
 void OnLevelUp(int level)
 {
     // タイトルと説明を追加できます。
@@ -261,6 +246,8 @@ void OnLevelUp(int level)
 
 <b>コード例:</b>
 ```csharp
+using HistoryTracker;
+
 void Start()
 {
     HistErrorSaver.Create();

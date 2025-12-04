@@ -120,25 +120,6 @@ public void ApplyData(HistAppliedInfo info)
 }
 ```
 
-Example of loading game data with `ApplyData()` and then closing the game:
-
-```csharp
-public void ApplyData()
-{
-    // Reload game data
-    _saveSystem.Load();
-
-    // Quit the application
-#if UNITY_EDITOR
-    Debug.Log("Stopping play mode to apply save data.");
-    UnityEditor.EditorApplication.isPlaying = false;
-#else
-    Debug.Log("Quitting application to apply save data.");
-    Application.Quit();
-#endif
-}
-```
-
 ### HistRecordInfo
 
 The title and description set in `OnBeforeSave()` above will be displayed in the UI as follows:
@@ -157,6 +138,8 @@ Set the `IHistSaveDataHandler` implemented above to HistoryTracker. Configure it
 the game starts.
 
 ```csharp
+using HistoryTracker;
+
 void Awake()
 {
     // Initialize the repository that implements IHistSaveDataHandler in Awake
@@ -196,7 +179,7 @@ Displays a list of saved history.
 | ⑥  | Next Page            |
 | ⑦  | Close                |
 
-### Details
+### 詳細
 
 Details and operations for saved game data.
 
@@ -222,7 +205,7 @@ By default, this plugin operates only in the debug environment. You can adjust t
 ### Open via `Window > open History Tracker`
 <img src="Docs/menu.jpg" width="700"/>
 
-### Dialog
+### Settings Dialog
 
 <img src="Docs/settings.jpg" width="450"/>
 
@@ -252,6 +235,8 @@ occur.
 <b>Code Example:</b>
 
 ```csharp
+using HistoryTracker;
+
 void OnLevelUp(int level)
 {
     // You can add a title and description.
@@ -270,6 +255,8 @@ To use the pre-prepared code, execute the following. This is a singleton compone
 <b>Code Example:</b>
 
 ```csharp
+using HistoryTracker;
+
 void Start()
 {
     HistErrorSaver.Create();

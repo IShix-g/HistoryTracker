@@ -179,7 +179,7 @@ Displays a list of saved history.
 | ⑥  | Next Page            |
 | ⑦  | Close                |
 
-### 詳細
+### Details
 
 Details and operations for saved game data.
 
@@ -205,7 +205,7 @@ By default, this plugin operates only in the debug environment. You can adjust t
 ### Open via `Window > open History Tracker`
 <img src="Docs/menu.jpg" width="700"/>
 
-### Settings Dialog
+### Dialog
 
 <img src="Docs/settings.jpg" width="450"/>
 

@@ -198,10 +198,7 @@ namespace HistoryTracker
                             context.Post(_ => onError.Invoke(ex), default);
                         }
                     }
-                    else
-                    {
-                        Debug.LogError($"Unhandled exception in ContinueOnMainThread: {ex}");
-                    }
+                    Debug.LogError($"Unhandled exception in ContinueOnMainThread: {ex}");
                 }
                 finally
                 {

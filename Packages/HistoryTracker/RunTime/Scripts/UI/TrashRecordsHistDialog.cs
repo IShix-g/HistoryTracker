@@ -25,12 +25,12 @@ namespace HistoryTracker
             if (!_isFirstOpen
                 && _manager != manager)
             {
-                _manager.OnRestored -= OnRestored;
+                _manager.OnRestoreFromTrash -= OnRestoreFromTrash;
                 _manager.OnEmptyTrash -= OnEmptyTrash;
                 _isFirstOpen = true;
             }
             _manager = manager;
-            _manager.OnRestored += OnRestored;
+            _manager.OnRestoreFromTrash += OnRestoreFromTrash;
             _manager.OnEmptyTrash += OnEmptyTrash;
         }
 
@@ -52,7 +52,7 @@ namespace HistoryTracker
             {
                 return;
             }
-            _manager.OnRestored -= OnRestored;
+            _manager.OnRestoreFromTrash -= OnRestoreFromTrash;
             _manager.OnEmptyTrash -= OnEmptyTrash;
         }
 
@@ -162,7 +162,7 @@ namespace HistoryTracker
             _manager.Save();
         }
 
-        void OnRestored(HistRecord record) => Refresh();
+        void OnRestoreFromTrash(HistRecord record) => Refresh();
 
         void OnEmptyTrash() => Refresh(true);
     }

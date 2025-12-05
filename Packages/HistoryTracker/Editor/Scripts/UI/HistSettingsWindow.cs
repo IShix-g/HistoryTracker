@@ -53,7 +53,7 @@ namespace HistoryTracker.Editor
             _helpHeader = EditorGUIUtility.IconContent("Help");
             var setting = HistSettings.Current;
             _settingsObject = new SerializedObject(setting);
-            _versionChecker.Fetch().Handled(_ =>
+            _versionChecker.Fetch().ContinueOnMainThread(_ =>
             {
                 _hasNewVersion = _versionChecker.HasNewVersion();
             });

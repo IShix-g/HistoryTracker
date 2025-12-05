@@ -29,19 +29,11 @@ namespace HistoryTracker
             if (!_isFirstOpen
                 && _manager != manager)
             {
-                _manager.OnAddRecord -= OnAddRecord;
-                _manager.OnRemoveRecord -= OnRemoveRecord;
-                _manager.OnStartApply -= OnStartApply;
-                _manager.OnEndApply -= OnEndApply;
-                _manager.OnRestored -= OnRestored;
+                UnbindManagerEvents();
                 _isFirstOpen = true;
             }
             _manager = manager;
-            _manager.OnAddRecord += OnAddRecord;
-            _manager.OnRemoveRecord += OnRemoveRecord;
-            _manager.OnStartApply += OnStartApply;
-            _manager.OnEndApply += OnEndApply;
-            _manager.OnRestored += OnRestored;
+            BindManagerEvents();
             _trashDialog.Initialize(manager);
         }
 
@@ -63,15 +55,34 @@ namespace HistoryTracker
 
         void OnDestroy()
         {
-            if (_manager == null)
+            if (_manager != null)
             {
-                return;
+                UnbindManagerEvents();
             }
+        }
+
+        void BindManagerEvents()
+        {
+            _manager.OnStartSave += OnStartSave;
+            _manager.OnEndSave += OnEndSave;
+            _manager.OnStartAddRecord += OnStartAddRecord;
+            _manager.OnEndAddRecord += OnEndAddRecord;
+            _manager.OnAddRecord += OnAddRecord;
+            _manager.OnRemoveRecord += OnRemoveRecord;
+            _manager.OnStartApply += OnStartApply;
+            _manager.OnEndApply += OnEndApply;
+        }
+
+        void UnbindManagerEvents()
+        {
+            _manager.OnStartSave -= OnStartSave;
+            _manager.OnEndSave -= OnEndSave;
+            _manager.OnStartAddRecord += OnStartAddRecord;
+            _manager.OnEndAddRecord -= OnEndAddRecord;
             _manager.OnAddRecord -= OnAddRecord;
-            _manager.OnRemoveRecord -= OnRemoveRecord;
+            _manager.OnRemoveRecord += OnRemoveRecord;
             _manager.OnStartApply -= OnStartApply;
             _manager.OnEndApply -= OnEndApply;
-            _manager.OnRestored -= OnRestored;
         }
 
         public void Open(Action closeAction = null)
@@ -87,6 +98,8 @@ namespace HistoryTracker
             {
                 _recordPopUp.Close();
             }
+
+            UnLockDialog();
 
             if (!_isFirstOpen
                 && _manager.Records.Length == _prevRecordsLength)
@@ -179,43 +192,56 @@ namespace HistoryTracker
             }
         }
 
+        void OnStartSave()
+        {
+            if (IsOpen)
+            {
+                LockDialog();
+            }
+        }
+
+        void OnEndSave()
+        {
+            if (IsOpen)
+            {
+                UnLockDialog();
+            }
+        }
+
+        void OnStartAddRecord()
+        {
+            if (IsOpen)
+            {
+                LockDialog();
+            }
+        }
+
+        void OnEndAddRecord()
+        {
+            if (IsOpen)
+            {
+                UnLockDialog();
+                _manager.Save();
+            }
+        }
+
         void OnStartApply()
         {
-            if (!IsOpen)
+            if (IsOpen)
             {
-                return;
+                LockDialog();
             }
-            _saveButton.interactable = false;
-            _closeButton.interactable = false;
-            _nextButton.interactable = false;
-            _prevButton.interactable = false;
         }
 
         void OnEndApply(HistAppliedInfo info)
         {
-            if (!IsOpen)
-            {
-                return;
-            }
-            _saveButton.interactable = true;
-            _closeButton.interactable = true;
-            _nextButton.interactable = true;
-            _prevButton.interactable = true;
-        }
-
-        void OnRestored(HistRecord record)
-        {
             if (IsOpen)
             {
-                Refresh();
+                UnLockDialog();
             }
         }
 
-        void OnSaveButtonClicked()
-        {
-            _manager.SaveHistory();
-            _manager.Save();
-        }
+        void OnSaveButtonClicked() => _manager.SaveHistory();
 
         void OnNextButtonClicked()
         {
@@ -271,6 +297,22 @@ namespace HistoryTracker
                     break;
                 }
             }
+        }
+
+        void LockDialog()
+        {
+            _saveButton.interactable = false;
+            _closeButton.interactable = false;
+            _nextButton.interactable = false;
+            _prevButton.interactable = false;
+        }
+
+        void UnLockDialog()
+        {
+            _saveButton.interactable = true;
+            _closeButton.interactable = true;
+            _nextButton.interactable = true;
+            _prevButton.interactable = true;
         }
     }
 }

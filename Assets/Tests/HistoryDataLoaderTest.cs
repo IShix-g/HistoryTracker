@@ -1,9 +1,11 @@
 
+using System.Collections;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using HistoryTracker;
 using UnityEngine;
+using UnityEngine.TestTools;
 
 namespace Tests
 {
@@ -17,8 +19,8 @@ namespace Tests
         };
         const string _dirName = "EditorTest";
 
-        [Test]
-        public void SaveTest()
+        [UnityTest]
+        public IEnumerator SaveTest()
         {
             var repository = new ModelRepository();
             repository.Load(s_paths);
@@ -26,14 +28,22 @@ namespace Tests
             var testCount = 3;
             var service = new PersistentHistDataService(_dirName);
             var paths = repository.Paths.Values.ToArray();
-            
+            var length = 0;
+
             for (var i = 1; i <= testCount; i++)
             {
-                var record = service.Add(paths);
-                record.Title = $"Test {i}";
-                record.Description = $"Description {i}";
+                var index = i;
+                service.Add(paths, record =>
+                {
+                    record.Title = $"Test {index}";
+                    record.Description = $"Description {index}";
+                    length++;
+                });
             }
-            service.Save();
+
+            yield return new WaitUntil(() => length == testCount);
+
+            service.Save(null);
 
             service = new PersistentHistDataService(_dirName);
             Assert.That(service.GetRecords().Length, Is.EqualTo(testCount));

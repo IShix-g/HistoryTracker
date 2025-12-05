@@ -6,6 +6,10 @@ namespace HistoryTracker
 {
     internal sealed class HistManager
     {
+        public event Action OnStartSave = delegate {};
+        public event Action OnEndSave = delegate {};
+        public event Action OnStartAddRecord = delegate {};
+        public event Action OnEndAddRecord = delegate {};
         public event Action<HistRecord> OnAddRecord = delegate {};
         public event Action<HistRecord> OnRemoveRecord = delegate {};
         public event Action<HistRecord> OnRestored = delegate {};
@@ -25,21 +29,29 @@ namespace HistoryTracker
             _service = service;
         }
 
-        public void Save() => _service.Save();
+        public void Save()
+        {
+            OnStartSave();
+            _service.Save(() => OnEndSave());
+        }
 
         public void Delete() => _service.Delete();
 
         public void DeleteAll() => _service.DeleteAll();
 
-        public HistRecord SaveHistory(HistRecordInfo addInfo = null, HistRecordInfoPlacement placement = HistRecordInfoPlacement.Prepend)
+        public void SaveHistory(HistRecordInfo addInfo = null, HistRecordInfoPlacement placement = HistRecordInfoPlacement.Prepend, Action<HistRecord> added = null)
         {
-            var paths = _handler.GetSaveFilePaths();
+            OnStartAddRecord();
             var info = _handler.OnBeforeSave();
-            var record = _service.Add(paths);
-            record.Title = MergeRecordText(placement, info.Title, addInfo?.Title);
-            record.Description = MergeRecordText(placement, info.Description, addInfo?.Description) + "\nPaths:\n" + ToNormalizedPathString(record);
-            OnAddRecord(record);
-            return record;
+            var paths = _handler.GetSaveFilePaths();
+            _service.Add(paths, record =>
+            {
+                record.Title = MergeRecordText(placement, info.Title, addInfo?.Title);
+                record.Description = MergeRecordText(placement, info.Description, addInfo?.Description) + "\nPaths:\n" + ToNormalizedPathString(record);
+                added?.Invoke(record);
+                OnAddRecord(record);
+                OnEndAddRecord();
+            });
         }
 
         public void Apply(HistRecord record, Action<bool> onFinished = null)
@@ -60,6 +72,7 @@ namespace HistoryTracker
                     var savedDate = DateTime.Parse(record.TimeStamp);
                     info = new HistAppliedInfo(record.Id, record.Title, savedDate);
                     _handler.ApplyData(info);
+                    OnRestored(record);
                 }
                 onFinished?.Invoke(isSuccess);
                 OnEndApply(info);

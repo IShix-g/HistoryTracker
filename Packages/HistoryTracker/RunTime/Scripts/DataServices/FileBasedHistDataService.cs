@@ -80,14 +80,7 @@ namespace HistoryTracker
             return record;
         }
 
-        public HistRecord Set(string recordId, IReadOnlyList<string> paths)
-        {
-            var record = _records.GetOrCreateById(recordId);
-            Set(record, paths);
-            return record;
-        }
-
-        public void Set(HistRecord record, IReadOnlyList<string> paths)
+        void Set(HistRecord record, IReadOnlyList<string> paths)
         {
             Assert.IsTrue(_records.HasRecord(record.Id));
             var dir = record.Id;
@@ -204,8 +197,6 @@ namespace HistoryTracker
                 ListPool<Task>.Release(tasks);
             }
         }
-
-        public IReadOnlyList<HistRecord> GetTrashRecords() => _records.GetTrashRecords();
 
         public void MoveToTrash(HistRecord record) => _records.MoveToTrash(record);
 

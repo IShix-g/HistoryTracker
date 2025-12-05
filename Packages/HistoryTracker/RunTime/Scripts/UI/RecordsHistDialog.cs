@@ -221,7 +221,6 @@ namespace HistoryTracker
             if (IsOpen)
             {
                 UnLockDialog();
-                _manager.Save();
             }
         }
 
@@ -241,7 +240,8 @@ namespace HistoryTracker
             }
         }
 
-        void OnSaveButtonClicked() => _manager.SaveHistory();
+        void OnSaveButtonClicked()
+            => _manager.SaveHistory(null, HistRecordInfoPlacement.Prepend, _ => _manager.Save());
 
         void OnNextButtonClicked()
         {

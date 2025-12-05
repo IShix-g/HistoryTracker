@@ -12,7 +12,7 @@ namespace HistoryTracker
         public event Action OnEndAddRecord = delegate {};
         public event Action<HistRecord> OnAddRecord = delegate {};
         public event Action<HistRecord> OnRemoveRecord = delegate {};
-        public event Action<HistRecord> OnRestored = delegate {};
+        public event Action<HistRecord> OnRestoreFromTrash = delegate {};
         public event Action OnEmptyTrash = delegate {};
         public event Action OnStartApply = delegate {};
         public event Action<HistAppliedInfo> OnEndApply = delegate {};
@@ -54,7 +54,7 @@ namespace HistoryTracker
             });
         }
 
-        public void Apply(HistRecord record, Action<bool> onFinished = null)
+        public void Apply(HistRecord record, Action<bool> completed = null)
         {
             if (IsStartApply)
             {
@@ -72,9 +72,8 @@ namespace HistoryTracker
                     var savedDate = DateTime.Parse(record.TimeStamp);
                     info = new HistAppliedInfo(record.Id, record.Title, savedDate);
                     _handler.ApplyData(info);
-                    OnRestored(record);
                 }
-                onFinished?.Invoke(isSuccess);
+                completed?.Invoke(isSuccess);
                 OnEndApply(info);
             });
         }
@@ -88,7 +87,7 @@ namespace HistoryTracker
         public void RestoreFromTrash(HistRecord record)
         {
             _service.RestoreFromTrash(record);
-            OnRestored(record);
+            OnRestoreFromTrash(record);
         }
 
         public void EmptyTrash()

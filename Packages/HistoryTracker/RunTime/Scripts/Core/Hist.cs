@@ -71,8 +71,7 @@ namespace HistoryTracker
             if (HistSettings.Current.IsScopeActive
                 && s_manager != null)
             {
-                s_manager.SaveHistory(addInfo, placement);
-                s_manager.Save();
+                s_manager.SaveHistory(addInfo, placement, _ => s_manager.Save());
             }
         }
 

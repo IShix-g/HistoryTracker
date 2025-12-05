@@ -34,8 +34,8 @@ namespace HistoryTracker
                 {
                     return;
                 }
-                var bytes = File.ReadAllBytes(DataPath);
-                _records = Load(bytes);
+                var json = File.ReadAllText(DataPath);
+                _records = JsonUtility.FromJson<HistRecords>(json);
             }
             finally
             {
@@ -50,7 +50,9 @@ namespace HistoryTracker
             return JsonUtility.FromJson<HistRecords>(json);
         }
 
-        public void Save()
+        public void Save(Action completed) => SaveAsync().ContinueOnMainThread(_ => completed?.Invoke());
+
+        async Task SaveAsync()
         {
             var json = JsonUtility.ToJson(_records);
             if (string.IsNullOrEmpty(json)
@@ -58,9 +60,8 @@ namespace HistoryTracker
             {
                 throw new InvalidOperationException("[HistoryTracker] Serialization result is invalid. Unable to save.");
             }
-            Directory.CreateDirectory(RootDir);
             var bytes = Encoding.UTF8.GetBytes(json);
-            File.WriteAllBytes(DataPath, bytes);
+            await File.WriteAllBytesAsync(DataPath, bytes);
         }
 
         public void Delete() => File.Delete(DataPath);
@@ -73,21 +74,13 @@ namespace HistoryTracker
             }
         }
 
-        public HistRecord Add(IReadOnlyList<string> paths)
+        public void Add(IReadOnlyList<string> paths, Action<HistRecord> completed)
         {
             var record = _records.Create();
-            Set(record, paths);
-            return record;
+            SetAsync(record, paths).ContinueOnMainThread(_ => completed?.Invoke(record));
         }
 
-        public HistRecord Set(string recordId, IReadOnlyList<string> paths)
-        {
-            var record = _records.GetOrCreateById(recordId);
-            Set(record, paths);
-            return record;
-        }
-
-        public void Set(HistRecord record, IReadOnlyList<string> paths)
+        async Task SetAsync(HistRecord record, IReadOnlyList<string> paths)
         {
             Assert.IsTrue(_records.HasRecord(record.Id));
             var dir = record.Id;
@@ -102,17 +95,27 @@ namespace HistoryTracker
 
             record.Paths = newFilePaths;
 
-            for (var i = 0; i < paths.Count; i++)
+            var tasks = ListPool<Task>.Get();
+            try
             {
-                var source = paths[i];
-                var target = Path.Combine(RootDir, newFilePaths[i]);
-                EnsureCopy(source, target);
+                for (var i = 0; i < paths.Count; i++)
+                {
+                    var source = paths[i];
+                    var target = Path.Combine(RootDir, newFilePaths[i]);
+                    var task = EnsureCopyAsync(source, target);
+                    tasks.Add(task);
+                }
+                await Task.WhenAll(tasks);
+            }
+            finally
+            {
+                ListPool<Task>.Release(tasks);
             }
         }
 
         public void Apply(HistRecord record, IReadOnlyList<string> paths, Action<bool> onFinished = null)
             => ApplyAsync(record, paths)
-                .Handled(_ => onFinished?.Invoke(true), _ => onFinished?.Invoke(false));
+                .ContinueOnMainThread(_ => onFinished?.Invoke(true), _ => onFinished?.Invoke(false));
 
         public async Task ApplyAsync(HistRecord record, IReadOnlyList<string> paths)
         {
@@ -159,7 +162,8 @@ namespace HistoryTracker
                         else
 #endif
                         {
-                            EnsureCopy(sourcePath, path);
+                            var task = EnsureCopyAsync(sourcePath, path);
+                            tasks.Add(task);
                         }
                         copied = true;
                         usedPathsFlags[i] = true;
@@ -205,8 +209,6 @@ namespace HistoryTracker
             }
         }
 
-        public IReadOnlyList<HistRecord> GetTrashRecords() => _records.GetTrashRecords();
-
         public void MoveToTrash(HistRecord record) => _records.MoveToTrash(record);
 
         public void RestoreFromTrash(HistRecord record) => _records.RestoreFromTrash(record);
@@ -225,7 +227,7 @@ namespace HistoryTracker
             _records.EmptyTrash();
         }
 
-        void EnsureCopy(string source, string target)
+        async Task EnsureCopyAsync(string source, string target)
         {
             var targetDir = Path.GetDirectoryName(target);
             if (!string.IsNullOrEmpty(targetDir)
@@ -233,7 +235,10 @@ namespace HistoryTracker
             {
                 Directory.CreateDirectory(targetDir);
             }
-            File.Copy(source, target, overwrite: true);
+
+            await using var sourceStream = new FileStream(source, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize: 4096, useAsync: true);
+            await using var targetStream = new FileStream(target, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 4096, useAsync: true);
+            await sourceStream.CopyToAsync(targetStream);
         }
     }
 }

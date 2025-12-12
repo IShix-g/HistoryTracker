@@ -21,6 +21,7 @@ jobs:
         run: |
           pr_title=${{ toJSON(github.event.pull_request.title) }}
           echo "Pull Request title: $pr_title"
+
           pr_title_lower=$(echo "$pr_title" | tr '[:upper:]' '[:lower:]')
           echo "Pull Request title (lowercase): $pr_title_lower"
           

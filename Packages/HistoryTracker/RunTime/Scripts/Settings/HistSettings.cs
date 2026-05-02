@@ -20,8 +20,11 @@ namespace HistoryTracker
         [SerializeField, Tooltip("Whether to include records generated on Editor in the build")]
         bool _includeRecordsInBuild = true;
 
+        /// <summary>Current activation scope configured in settings.</summary>
         public ActivationScope CurrentScope => _activationScope;
-        public bool IncludeRecordsInBuild => _includeRecordsInBuild;
+
+        /// <summary>Whether records should be included in build under current build scope.</summary>
+        public bool IncludeRecordsInBuild => _includeRecordsInBuild && IsBuildScopeActive;
 
         public enum ActivationScope
         {
@@ -48,6 +51,7 @@ namespace HistoryTracker
 
         public static bool HasSettings => Load() != null;
 
+        /// <summary>Whether HistoryTracker is active in the current runtime context.</summary>
         public bool IsScopeActive
         {
             get
@@ -56,6 +60,21 @@ namespace HistoryTracker
                 return true;
 #elif DEVELOPMENT_BUILD
                 return Current.CurrentScope == ActivationScope.DevelopmentBuild || Current.CurrentScope == ActivationScope.All;
+#else
+                return Current.CurrentScope == ActivationScope.All;
+#endif
+            }
+        }
+
+        /// <summary>Whether HistoryTracker is active for the current build target context.</summary>
+        public bool IsBuildScopeActive
+        {
+            get
+            {
+#if UNITY_EDITOR
+                var scope = CurrentScope;
+                return (scope == ActivationScope.DevelopmentBuild && EditorUserBuildSettings.development)
+                       || scope == ActivationScope.All;
 #else
                 return Current.CurrentScope == ActivationScope.All;
 #endif
@@ -76,10 +95,10 @@ namespace HistoryTracker
             AssetDatabase.CreateAsset(settings, SettingFullPath);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+            return Load();
 #else
             throw new System.InvalidOperationException("[HistoryTracker] Cannot create settings asset in editor.");
 #endif
-            return Load();
         }
 
         public static HistSettings Load() => Resources.Load<HistSettings>(SettingResourcesPath);

@@ -14,14 +14,14 @@ namespace HistoryTracker.Editor
         public int callbackOrder => 0;
 
         bool _isCopiedResources;
-        
+
         public void OnPreprocessBuild(BuildReport report)
         {
             if (!HistSettings.HasSettings)
             {
                 return;
             }
-            if (IsActiveHistoryTracker())
+            if (HistSettings.Current.IsBuildScopeActive)
             {
                 EditorApplication.update += OnUpdate;
                 _isCopiedResources = true;
@@ -40,6 +40,14 @@ namespace HistoryTracker.Editor
             }
         }
 
+        void OnUpdate()
+        {
+            if (!BuildPipeline.isBuildingPlayer)
+            {
+                OnPostprocessBuild(default);
+            }
+        }
+
         public void OnPostprocessBuild(BuildReport report)
         {
             EditorApplication.update -= OnUpdate;
@@ -50,21 +58,13 @@ namespace HistoryTracker.Editor
             }
         }
 
-        void OnUpdate()
-        {
-            if (!BuildPipeline.isBuildingPlayer)
-            {
-                OnPostprocessBuild(default);
-            }
-        }
-        
         void Cleanup()
         {
             if (!HistSettings.HasSettings)
             {
                 return;
             }
-            if (IsActiveHistoryTracker())
+            if (HistSettings.Current.IsBuildScopeActive)
             {
                 DeleteResource(HistUI.ResourcesFullPath);
             }
@@ -73,13 +73,6 @@ namespace HistoryTracker.Editor
                 var dstDir = Path.Combine(Application.dataPath, HistSettings.AssetDstRootDir);
                 DeleteResourceDirectory(dstDir);
             }
-        }
-        
-        bool IsActiveHistoryTracker()
-        {
-            var scope = HistSettings.Current.CurrentScope;
-            return (scope == HistSettings.ActivationScope.DevelopmentBuild && EditorUserBuildSettings.development)
-                    || scope == HistSettings.ActivationScope.All;
         }
 
         void WriteResource(string resourcePath, string dstPath)
@@ -147,7 +140,7 @@ namespace HistoryTracker.Editor
             DeleteEmptyDirectoryUpwards(dir);
             AssetDatabase.Refresh();
         }
-        
+
         void DeleteEmptyDirectoryUpwards(string dirPath)
         {
             dirPath = dirPath.Replace("\\", "/");
@@ -164,7 +157,7 @@ namespace HistoryTracker.Editor
                 {
                     return;
                 }
-                
+
                 var fileSystemEntries = Directory.GetFileSystemEntries(dirPath);
 
                 if (fileSystemEntries.Length == 0)
@@ -182,7 +175,7 @@ namespace HistoryTracker.Editor
                 }
             }
         }
-        
+
         void DeleteDirectory(string path, bool recursive = false)
         {
             Directory.Delete(path, recursive);

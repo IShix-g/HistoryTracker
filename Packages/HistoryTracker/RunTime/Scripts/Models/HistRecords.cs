@@ -56,7 +56,7 @@ namespace HistoryTracker
             var id = IdGenerator.NewId(_machineId);
             var record = new HistRecord(id)
             {
-                TimeStamp = DateTime.Now.ToUniversalTime().ToString("o")
+                TimeStamp = DateTime.UtcNow.ToString("o")
             };
             _records.Add(record);
             return record;

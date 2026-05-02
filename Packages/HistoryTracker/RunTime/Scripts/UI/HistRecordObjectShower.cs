@@ -5,11 +5,11 @@ using UnityEngine.EventSystems;
 
 namespace HistoryTracker
 {
-    internal sealed class HistRecordObjectShower : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+    internal sealed class HistRecordObjectShower : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
     {
         public event Action OnShow = delegate {};
         public event Action OnHide = delegate {};
-        
+
         [SerializeField] RectTransform _parent;
         [SerializeField] bool _hideOnAwake = true;
 
@@ -52,7 +52,7 @@ namespace HistoryTracker
             _parent.gameObject.SetActive(true);
             OnShow();
         }
-        
+
         public void Hide()
         {
             IsShow = false;
@@ -65,9 +65,8 @@ namespace HistoryTracker
             _tapTime = 1.5f;
         }
 
-        public void OnPointerUp(PointerEventData eventData)
-        {
-            _tapTime = 0;
-        }
+        public void OnPointerUp(PointerEventData eventData) => _tapTime = 0;
+
+        public void OnDrag(PointerEventData eventData) => _tapTime = 0;
     }
 }

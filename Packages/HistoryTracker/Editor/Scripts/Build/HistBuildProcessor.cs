@@ -14,7 +14,7 @@ namespace HistoryTracker.Editor
         public int callbackOrder => 0;
 
         bool _isCopiedResources;
-        
+
         public void OnPreprocessBuild(BuildReport report)
         {
             if (!HistSettings.HasSettings)
@@ -40,6 +40,14 @@ namespace HistoryTracker.Editor
             }
         }
 
+        void OnUpdate()
+        {
+            if (!BuildPipeline.isBuildingPlayer)
+            {
+                OnPostprocessBuild(default);
+            }
+        }
+
         public void OnPostprocessBuild(BuildReport report)
         {
             EditorApplication.update -= OnUpdate;
@@ -50,14 +58,6 @@ namespace HistoryTracker.Editor
             }
         }
 
-        void OnUpdate()
-        {
-            if (!BuildPipeline.isBuildingPlayer)
-            {
-                OnPostprocessBuild(default);
-            }
-        }
-        
         void Cleanup()
         {
             if (!HistSettings.HasSettings)
@@ -74,7 +74,7 @@ namespace HistoryTracker.Editor
                 DeleteResourceDirectory(dstDir);
             }
         }
-        
+
         bool IsActiveHistoryTracker()
         {
             var scope = HistSettings.Current.CurrentScope;
@@ -147,7 +147,7 @@ namespace HistoryTracker.Editor
             DeleteEmptyDirectoryUpwards(dir);
             AssetDatabase.Refresh();
         }
-        
+
         void DeleteEmptyDirectoryUpwards(string dirPath)
         {
             dirPath = dirPath.Replace("\\", "/");
@@ -164,7 +164,7 @@ namespace HistoryTracker.Editor
                 {
                     return;
                 }
-                
+
                 var fileSystemEntries = Directory.GetFileSystemEntries(dirPath);
 
                 if (fileSystemEntries.Length == 0)
@@ -182,7 +182,7 @@ namespace HistoryTracker.Editor
                 }
             }
         }
-        
+
         void DeleteDirectory(string path, bool recursive = false)
         {
             Directory.Delete(path, recursive);

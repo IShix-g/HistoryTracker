@@ -21,7 +21,7 @@ namespace HistoryTracker.Editor
             {
                 return;
             }
-            if (IsActiveHistoryTracker())
+            if (HistSettings.Current.IsBuildScopeActive)
             {
                 EditorApplication.update += OnUpdate;
                 _isCopiedResources = true;
@@ -64,7 +64,7 @@ namespace HistoryTracker.Editor
             {
                 return;
             }
-            if (IsActiveHistoryTracker())
+            if (HistSettings.Current.IsBuildScopeActive)
             {
                 DeleteResource(HistUI.ResourcesFullPath);
             }
@@ -73,13 +73,6 @@ namespace HistoryTracker.Editor
                 var dstDir = Path.Combine(Application.dataPath, HistSettings.AssetDstRootDir);
                 DeleteResourceDirectory(dstDir);
             }
-        }
-
-        bool IsActiveHistoryTracker()
-        {
-            var scope = HistSettings.Current.CurrentScope;
-            return (scope == HistSettings.ActivationScope.DevelopmentBuild && EditorUserBuildSettings.development)
-                    || scope == HistSettings.ActivationScope.All;
         }
 
         void WriteResource(string resourcePath, string dstPath)

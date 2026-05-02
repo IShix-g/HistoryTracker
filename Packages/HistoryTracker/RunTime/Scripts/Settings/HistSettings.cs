@@ -76,10 +76,10 @@ namespace HistoryTracker
             AssetDatabase.CreateAsset(settings, SettingFullPath);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+            return Load();
 #else
             throw new System.InvalidOperationException("[HistoryTracker] Cannot create settings asset in editor.");
 #endif
-            return Load();
         }
 
         public static HistSettings Load() => Resources.Load<HistSettings>(SettingResourcesPath);
